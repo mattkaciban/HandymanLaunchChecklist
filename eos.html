@@ -1,0 +1,1169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EOS Framework — Live</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%A7%AD%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#eef1f5;
+  --surface:#ffffff;
+  --surface-alt:#e4e9ef;
+  --surface-alt-2:#dbe2ea;
+  --border:#c9d3dd;
+  --text:#182635;
+  --text-muted:#5c6b7c;
+  --navy:#173350;
+  --navy-deep:#0d1f31;
+  --navy-text:#ffffff;
+  --gold:#b5842a;
+  --gold-bg:#f6ecd6;
+  --steel:#3f6f97;
+  --steel-bg:#e4edf5;
+  --success:#276a45;
+  --success-bg:#e0f0e6;
+  --danger:#a83c26;
+  --danger-bg:#f8e4de;
+  --warn:#8a6d1d;
+  --warn-bg:#faf1d9;
+  --shadow: 0 1px 2px rgba(13,31,50,.06), 0 6px 16px -8px rgba(13,31,50,.18);
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c141e;
+    --surface:#141f2c;
+    --surface-alt:#1a2735;
+    --surface-alt-2:#20303f;
+    --border:#2b3c4d;
+    --text:#e8edf3;
+    --text-muted:#94a6b8;
+    --navy:#2c5a82;
+    --navy-deep:#0a1520;
+    --navy-text:#f2f6fa;
+    --gold:#dcaa55;
+    --gold-bg:#2c2410;
+    --steel:#7badd6;
+    --steel-bg:#132435;
+    --success:#5cbb87;
+    --success-bg:#122b1d;
+    --danger:#e88264;
+    --danger-bg:#2c1710;
+    --warn:#e8c565;
+    --warn-bg:#2c2410;
+  }
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.45;
+}
+button{font-family:inherit;}
+input,select,textarea{font-family:inherit;font-size:14px;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 8px;}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--steel);outline-offset:1px;}
+textarea{resize:vertical;min-height:60px;}
+a{color:var(--steel);}
+.hidden{display:none!important;}
+
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  background:var(--navy);color:var(--navy-text);
+  padding:10px 18px;
+  box-shadow:var(--shadow);
+}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:baseline;gap:8px;}
+.brand-sub{font-weight:400;font-size:12.5px;opacity:.8;}
+.topbar-spacer{flex:1;}
+.identity{font-size:13px;display:flex;align-items:center;gap:6px;opacity:.95;}
+.identity strong{color:var(--gold);}
+.identity button{background:transparent;border:1px solid rgba(255,255,255,.35);color:var(--navy-text);border-radius:6px;padding:3px 9px;font-size:12px;cursor:pointer;}
+.identity button:hover{background:rgba(255,255,255,.12);}
+
+.status{display:flex;align-items:center;gap:6px;font-size:12.5px;opacity:.9;}
+.status-dot{width:9px;height:9px;border-radius:50%;background:#999;flex:none;}
+.status-dot.connecting{background:#e0ac2f;animation:pulse 1.2s infinite;}
+.status-dot.live{background:#3fbf6f;}
+.status-dot.offline{background:#c94f30;}
+.status-dot.error{background:#c94f30;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+.topbtn{background:var(--gold);color:#2b1f06;border:none;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;}
+.topbtn:hover{filter:brightness(1.06);}
+.topbtn.share-copied{background:var(--success);color:#fff;}
+
+.tabs{
+  position:sticky;top:47px;z-index:19;
+  display:flex;gap:2px;background:var(--navy-deep);padding:0 14px;overflow-x:auto;
+}
+.tab{
+  background:transparent;border:none;color:rgba(255,255,255,.65);
+  padding:11px 16px;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;
+}
+.tab:hover{color:#fff;}
+.tab.active{color:#fff;border-bottom-color:var(--gold);}
+
+main{max-width:1180px;margin:0 auto;padding:20px 16px 60px;}
+.tabpanel{display:none;}
+.tabpanel.active{display:block;}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;margin-bottom:16px;}
+.card h2{margin:0 0 4px;font-size:16px;color:var(--navy);}
+.card h3{margin:0 0 8px;font-size:13.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;}
+.card .hint{font-size:12.5px;color:var(--text-muted);margin:0 0 12px;}
+@media (prefers-color-scheme: dark){ .card h2{color:var(--gold);} }
+:root[data-theme="dark"] .card h2{color:var(--gold);}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media (max-width:840px){ .grid2{grid-template-columns:1fr;} }
+
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:12.5px;font-weight:600;color:var(--text-muted);margin-bottom:4px;}
+.field input,.field textarea{width:100%;}
+.field-row{display:flex;gap:10px;flex-wrap:wrap;}
+.field-row .field{flex:1;min-width:140px;}
+
+.owner-settings{display:flex;gap:10px;flex-wrap:wrap;}
+.owner-settings .field{flex:1;min-width:150px;margin-bottom:0;}
+
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.02em;}
+.pill.ontrack{background:var(--success-bg);color:var(--success);}
+.pill.offtrack{background:var(--danger-bg);color:var(--danger);}
+.pill.done{background:var(--steel-bg);color:var(--steel);}
+.pill.open{background:var(--warn-bg);color:var(--warn);}
+.pill.solved{background:var(--success-bg);color:var(--success);}
+
+.values-list,.simple-list{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:6px;}
+.values-list li,.simple-list li{display:flex;align-items:center;gap:8px;}
+.values-list li input,.simple-list-text{flex:1;}
+.icon-btn{background:transparent;border:1px solid var(--border);border-radius:6px;width:28px;height:28px;flex:none;cursor:pointer;color:var(--danger);font-size:14px;line-height:1;}
+.icon-btn:hover{background:var(--danger-bg);}
+.add-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.add-row input,.add-row select{flex:1;min-width:120px;}
+.add-btn{background:var(--steel);color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;flex:none;}
+.add-btn:hover{filter:brightness(1.08);}
+
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
+.toolbar select{min-width:150px;}
+
+.rock-list{display:flex;flex-direction:column;gap:8px;}
+.rock-card{border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface-alt);}
+.rock-card .rock-title{flex:2;min-width:180px;font-weight:600;border:1px solid transparent;background:transparent;padding:4px 6px;}
+.rock-card .rock-title:focus{background:var(--surface);border-color:var(--border);}
+.rock-card select,.rock-card input[type="date"]{min-width:0;}
+.rock-quarter-tag{font-size:11px;color:var(--text-muted);background:var(--surface-alt-2);padding:2px 8px;border-radius:999px;flex:none;}
+
+.issue-row{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:8px;padding:8px 10px;background:var(--surface-alt);margin-bottom:6px;}
+.issue-row.solved{opacity:.6;}
+.issue-row.solved .issue-title{text-decoration:line-through;}
+.issue-title{flex:1;border:1px solid transparent;background:transparent;padding:4px 6px;}
+.issue-title:focus{background:var(--surface);border-color:var(--border);}
+.solved-section{margin-top:14px;}
+.solved-toggle{background:transparent;border:none;color:var(--text-muted);font-size:12.5px;cursor:pointer;text-decoration:underline;padding:0;}
+
+.sc-table-wrap{overflow-x:auto;}
+table.sc-table{border-collapse:collapse;width:100%;font-size:13px;}
+table.sc-table th,table.sc-table td{border:1px solid var(--border);padding:6px 8px;text-align:center;}
+table.sc-table th{background:var(--surface-alt);font-size:11.5px;color:var(--text-muted);white-space:nowrap;}
+table.sc-table td.measurable-name-cell{text-align:left;min-width:170px;}
+table.sc-table td.measurable-name-cell input{width:100%;border:none;background:transparent;font-weight:600;padding:2px 4px;}
+table.sc-table td.measurable-name-cell input:focus{background:var(--surface);border:1px solid var(--border);border-radius:4px;}
+table.sc-table select.sc-owner{width:100%;font-size:12px;}
+table.sc-table input.sc-goal{width:70px;text-align:center;}
+table.sc-table input.sc-cell{width:70px;text-align:center;}
+table.sc-table th .week-del{background:transparent;border:none;color:var(--danger);cursor:pointer;font-size:11px;display:block;margin-top:2px;}
+
+.agenda-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;}
+.agenda-item{display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:8px;padding:9px 12px;background:var(--surface-alt);}
+.agenda-item.checked{background:var(--success-bg);border-color:var(--success);}
+.agenda-item input[type="checkbox"]{width:18px;height:18px;flex:none;}
+.agenda-item .agenda-label{flex:1;font-weight:600;}
+.agenda-item .agenda-min{font-size:12px;color:var(--text-muted);}
+
+.headline-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media (max-width:700px){ .headline-cols{grid-template-columns:1fr;} }
+
+.todo-row{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:8px;padding:7px 10px;background:var(--surface-alt);margin-bottom:6px;}
+.todo-row input[type="checkbox"]{width:17px;height:17px;flex:none;}
+.todo-row.done .todo-text{text-decoration:line-through;color:var(--text-muted);}
+.todo-text{flex:1;border:1px solid transparent;background:transparent;padding:4px 6px;}
+.todo-text:focus{background:var(--surface);border-color:var(--border);}
+.todo-owner{font-size:11.5px;color:var(--text-muted);flex:none;min-width:0;}
+
+.danger-btn{background:transparent;border:1px solid var(--danger);color:var(--danger);border-radius:6px;padding:6px 12px;font-size:12.5px;font-weight:600;cursor:pointer;}
+.danger-btn:hover{background:var(--danger-bg);}
+
+.vto-summary-cards{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+.vto-summary-card{flex:1;min-width:140px;border:1px solid var(--border);border-radius:8px;padding:10px 12px;background:var(--surface-alt);text-decoration:none;color:var(--text);display:block;}
+.vto-summary-card:hover{border-color:var(--steel);}
+.vto-summary-card .num{font-size:22px;font-weight:700;color:var(--navy);}
+:root[data-theme="dark"] .vto-summary-card .num{color:var(--gold);}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .vto-summary-card .num{color:var(--gold);} }
+.vto-summary-card .lbl{font-size:12px;color:var(--text-muted);}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(10,18,28,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px;}
+.modal{background:var(--surface);border-radius:12px;padding:22px 24px;max-width:420px;width:100%;box-shadow:var(--shadow);}
+.modal h2{margin:0 0 6px;color:var(--navy);font-size:18px;}
+:root[data-theme="dark"] .modal h2{color:var(--gold);}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .modal h2{color:var(--gold);} }
+.modal p{font-size:13px;color:var(--text-muted);margin:0 0 16px;}
+.who-options{display:flex;flex-direction:column;gap:8px;}
+.who-btn{background:var(--surface-alt);border:1px solid var(--border);border-radius:8px;padding:11px 14px;font-size:14.5px;font-weight:600;text-align:left;cursor:pointer;color:var(--text);}
+.who-btn:hover{border-color:var(--steel);background:var(--steel-bg);}
+
+.page-footer{max-width:1180px;margin:0 auto;padding:8px 16px 30px;font-size:11.5px;color:var(--text-muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand">🧭 EOS Framework <span class="brand-sub">Handy&rsquo;s Handyman Services</span></div>
+    <div class="topbar-spacer"></div>
+    <div class="identity">Viewing as <strong id="whoName">—</strong> <button id="switchWho" type="button">Switch</button></div>
+    <div class="status"><span id="statusDot" class="status-dot connecting"></span><span id="statusText">Connecting…</span></div>
+    <button id="shareBtn" class="topbtn" type="button">Share link</button>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="vto" type="button">V/TO</button>
+    <button class="tab" data-tab="rocks" type="button">Rocks</button>
+    <button class="tab" data-tab="scorecard" type="button">Scorecard</button>
+    <button class="tab" data-tab="issues" type="button">Issues List</button>
+    <button class="tab" data-tab="l10" type="button">L10 Meeting</button>
+  </nav>
+
+  <main>
+    <!-- V/TO -->
+    <section id="tab-vto" class="tabpanel active">
+      <div class="card">
+        <h3>Team</h3>
+        <p class="hint">Rename the three owner slots here — Rocks, to-dos, and issues can be assigned to whichever name you set.</p>
+        <div class="owner-settings">
+          <div class="field"><label>Owner 1</label><input type="text" data-path="owners.owner1" id="ownerInput1"></div>
+          <div class="field"><label>Owner 2</label><input type="text" data-path="owners.owner2" id="ownerInput2"></div>
+          <div class="field"><label>Owner 3</label><input type="text" data-path="owners.owner3" id="ownerInput3"></div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div>
+          <div class="card">
+            <h2>Vision</h2>
+            <h3>Core Values</h3>
+            <p class="hint">The handful of traits that define who belongs on this team.</p>
+            <ul class="values-list" id="coreValuesList"></ul>
+            <div class="add-row">
+              <input type="text" id="coreValueInput" placeholder="e.g., Do the right thing, even when no one's watching">
+              <button class="add-btn" id="addCoreValueBtn" type="button">Add</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Core Focus</h3>
+            <div class="field"><label>Purpose / Cause / Passion — why does this business exist?</label>
+              <textarea data-path="vto.purpose" id="vtoPurpose" placeholder="e.g., To give every homeowner one trustworthy person to call for anything that breaks."></textarea></div>
+            <div class="field"><label>Niche — what do we do better than anyone?</label>
+              <input type="text" data-path="vto.niche" id="vtoNiche" placeholder="e.g., Same-week handyman repairs, done right the first time"></div>
+          </div>
+
+          <div class="card">
+            <h3>10-Year Target</h3>
+            <textarea data-path="vto.tenYearTarget" id="vtoTenYear" placeholder="e.g., 12 locations, $30M system-wide revenue, ranked #1 regional handyman brand by 2036."></textarea>
+          </div>
+
+          <div class="card">
+            <h3>Marketing Strategy</h3>
+            <div class="field"><label>Target Market / "The List"</label>
+              <input type="text" data-path="vto.targetMarket" id="vtoTargetMarket" placeholder="Who's the ideal customer?"></div>
+            <div class="field"><label>Three Uniques</label>
+              <textarea data-path="vto.threeUniques" id="vtoThreeUniques" placeholder="1. ...&#10;2. ...&#10;3. ..."></textarea></div>
+            <div class="field"><label>Proven Process</label>
+              <input type="text" data-path="vto.provenProcess" id="vtoProvenProcess" placeholder="Name of your repeatable process"></div>
+            <div class="field"><label>Guarantee</label>
+              <input type="text" data-path="vto.guarantee" id="vtoGuarantee" placeholder="What do you promise the customer?"></div>
+          </div>
+
+          <div class="card">
+            <h3>3-Year Picture</h3>
+            <div class="field-row">
+              <div class="field"><label>Future Date</label><input type="text" data-path="vto.threeYear.futureDate" id="vto3Date" placeholder="12/31/2028"></div>
+              <div class="field"><label>Revenue</label><input type="text" data-path="vto.threeYear.revenue" id="vto3Revenue" placeholder="$"></div>
+              <div class="field"><label>Profit</label><input type="text" data-path="vto.threeYear.profit" id="vto3Profit" placeholder="$"></div>
+            </div>
+            <div class="field"><label>Other Measurables</label>
+              <textarea data-path="vto.threeYear.measurables" id="vto3Measurables"></textarea></div>
+            <div class="field"><label>What does it look like?</label>
+              <textarea data-path="vto.threeYear.lookLike" id="vto3LookLike" placeholder="Describe locations, team, systems, culture..."></textarea></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <h2>Traction — 1-Year Plan</h2>
+            <div class="field-row">
+              <div class="field"><label>Future Date</label><input type="text" data-path="vto.oneYear.futureDate" id="vto1Date" placeholder="12/31/2027"></div>
+              <div class="field"><label>Revenue</label><input type="text" data-path="vto.oneYear.revenue" id="vto1Revenue" placeholder="$"></div>
+              <div class="field"><label>Profit</label><input type="text" data-path="vto.oneYear.profit" id="vto1Profit" placeholder="$"></div>
+            </div>
+            <div class="field"><label>Goals for the Year</label>
+              <textarea data-path="vto.oneYear.goals" id="vto1Goals" placeholder="1. ...&#10;2. ...&#10;3. ..." style="min-height:120px;"></textarea></div>
+          </div>
+
+          <div class="card">
+            <h2>This Quarter, At a Glance</h2>
+            <p class="hint">Live counts from the Rocks and Issues List tabs.</p>
+            <div class="vto-summary-cards">
+              <a href="#" class="vto-summary-card" data-jump="rocks"><div class="num" id="sumRocksOnTrack">0</div><div class="lbl">Rocks on track</div></a>
+              <a href="#" class="vto-summary-card" data-jump="rocks"><div class="num" id="sumRocksOffTrack">0</div><div class="lbl">Rocks off track</div></a>
+              <a href="#" class="vto-summary-card" data-jump="issues"><div class="num" id="sumIssuesOpen">0</div><div class="lbl">Open issues</div></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROCKS -->
+    <section id="tab-rocks" class="tabpanel">
+      <div class="card">
+        <h2>Rocks</h2>
+        <p class="hint">Your team's 3–7 quarterly priorities. Every Rock has one owner and a hard due date.</p>
+        <div class="toolbar">
+          <select id="rockQuarterFilter"></select>
+          <div class="add-row" style="flex:2;min-width:280px;">
+            <input type="text" id="newRockTitle" placeholder="New Rock title...">
+            <select id="newRockOwner"></select>
+            <input type="text" id="newRockQuarter" placeholder="Q3 2026" style="max-width:110px;">
+            <input type="date" id="newRockDue" style="max-width:150px;">
+            <button class="add-btn" id="addRockBtn" type="button">Add Rock</button>
+          </div>
+        </div>
+        <div class="rock-list" id="rockList"></div>
+      </div>
+    </section>
+
+    <!-- SCORECARD -->
+    <section id="tab-scorecard" class="tabpanel">
+      <div class="card">
+        <h2>Scorecard</h2>
+        <p class="hint">5–15 weekly numbers that predict the health of the business. Add a measurable, then fill in each week.</p>
+        <div class="add-row" style="margin-bottom:14px;">
+          <input type="text" id="newMeasurableName" placeholder="Measurable name (e.g., Leads Booked)">
+          <select id="newMeasurableOwner"></select>
+          <input type="text" id="newMeasurableGoal" placeholder="Goal" style="max-width:100px;">
+          <button class="add-btn" id="addMeasurableBtn" type="button">Add Measurable</button>
+          <button class="add-btn" id="addWeekBtn" type="button" style="background:var(--navy);">+ Add Week</button>
+        </div>
+        <div class="sc-table-wrap">
+          <table class="sc-table" id="scTable"></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ISSUES -->
+    <section id="tab-issues" class="tabpanel">
+      <div class="card">
+        <h2>Issues List</h2>
+        <p class="hint">Identify, Discuss, Solve. Anything blocking the business goes here — real issues, once, solved for good.</p>
+        <div class="add-row" style="margin-bottom:14px;">
+          <input type="text" id="newIssueTitle" placeholder="New issue...">
+          <select id="newIssueOwner"></select>
+          <button class="add-btn" id="addIssueBtn" type="button">Add Issue</button>
+        </div>
+        <div id="openIssueList"></div>
+        <div class="solved-section">
+          <button class="solved-toggle" id="solvedToggle" type="button">Show solved issues (0)</button>
+          <div id="solvedIssueList" class="hidden" style="margin-top:8px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- L10 -->
+    <section id="tab-l10" class="tabpanel">
+      <div class="card">
+        <div class="toolbar">
+          <h2 style="margin:0;">Level 10 Meeting Agenda</h2>
+          <button class="danger-btn" id="resetMeetingBtn" type="button">Reset for next meeting</button>
+        </div>
+        <p class="hint">Check off each segment live as your weekly 90-minute meeting progresses — everyone sees it move in real time.</p>
+        <ul class="agenda-list" id="agendaList"></ul>
+      </div>
+
+      <div class="card">
+        <h2>Headlines</h2>
+        <p class="hint">Quick customer and employee news worth sharing with the team.</p>
+        <div class="headline-cols">
+          <div>
+            <h3>Customer Headlines</h3>
+            <ul class="simple-list" id="customerHeadlineList"></ul>
+            <div class="add-row"><input type="text" id="newCustomerHeadline" placeholder="Add a customer headline..."><button class="add-btn" id="addCustomerHeadlineBtn" type="button">Add</button></div>
+          </div>
+          <div>
+            <h3>Employee Headlines</h3>
+            <ul class="simple-list" id="employeeHeadlineList"></ul>
+            <div class="add-row"><input type="text" id="newEmployeeHeadline" placeholder="Add an employee headline..."><button class="add-btn" id="addEmployeeHeadlineBtn" type="button">Add</button></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>To-Do List</h2>
+        <p class="hint">Action items that come out of the meeting — due within 7 days.</p>
+        <div class="add-row" style="margin-bottom:12px;">
+          <input type="text" id="newTodoText" placeholder="New to-do...">
+          <select id="newTodoOwner"></select>
+          <button class="add-btn" id="addTodoBtn" type="button">Add</button>
+        </div>
+        <div id="todoList"></div>
+      </div>
+
+      <div class="card">
+        <h2>IDS Notes</h2>
+        <textarea id="l10Notes" data-path="l10.notes" style="min-height:100px;" placeholder="Notes from Identify, Discuss, Solve..."></textarea>
+      </div>
+    </section>
+  </main>
+
+  <footer class="page-footer">
+    <span>Handy&rsquo;s Handyman Services &mdash; EOS Framework</span>
+    <span>Live-synced for all 3 owners &middot; changes save automatically</span>
+  </footer>
+</div>
+
+<div id="whoModal" class="modal-overlay hidden">
+  <div class="modal">
+    <h2>Who's viewing?</h2>
+    <p>Pick your name so Rocks, to-dos, and issues default to you. You can switch anytime from the top bar, and rename these slots from the V/TO tab.</p>
+    <div class="who-options" id="whoOptions"></div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+import {
+  getFirestore, doc, setDoc, updateDoc, onSnapshot, serverTimestamp, deleteField
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBwjICGSORc1foiMBsYaJj9SS4kby1q4ME",
+  authDomain: "handyman-launch-checklist.firebaseapp.com",
+  projectId: "handyman-launch-checklist",
+  storageBucket: "handyman-launch-checklist.firebasestorage.app",
+  messagingSenderId: "707419632295",
+  appId: "1:707419632295:web:50396e47315f5e3755e182"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const docRef = doc(db, "eos", "main");
+
+// ---------- state ----------
+var state = null;
+var seeding = false;
+
+var AGENDA_ITEMS = [
+  {id:"segue", label:"Segue", min:"5 min"},
+  {id:"scorecard", label:"Scorecard Review", min:"5 min"},
+  {id:"rocks", label:"Rock Review", min:"5 min"},
+  {id:"headlines", label:"Customer / Employee Headlines", min:"5 min"},
+  {id:"todos", label:"To-Do List Review", min:"5 min"},
+  {id:"ids", label:"IDS — Identify, Discuss, Solve", min:"60 min"},
+  {id:"conclude", label:"Conclude — recap to-dos, rate the meeting", min:"5 min"}
+];
+
+function genId(){ return "x" + Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+function recentMondays(n){
+  var out = [];
+  var d = new Date();
+  var day = d.getDay();
+  var diffToMonday = (day === 0 ? -6 : 1 - day);
+  var monday = new Date(d.getFullYear(), d.getMonth(), d.getDate() + diffToMonday);
+  for (var i = n - 1; i >= 0; i--){
+    var wd = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() - 7 * i);
+    out.push(isoDate(wd));
+  }
+  return out;
+}
+function isoDate(d){
+  var m = ("0" + (d.getMonth() + 1)).slice(-2);
+  var day = ("0" + d.getDate()).slice(-2);
+  return d.getFullYear() + "-" + m + "-" + day;
+}
+function currentQuarterLabel(){
+  var d = new Date();
+  return "Q" + (Math.floor(d.getMonth() / 3) + 1) + " " + d.getFullYear();
+}
+
+function seedDoc(){
+  var weekKeys = {};
+  recentMondays(4).forEach(function(k){ weekKeys[k] = true; });
+  var measurables = {};
+  [
+    ["Leads Received","",""],["Jobs Booked","",""],["Revenue Invoiced ($)","",""],["5-Star Reviews","",""]
+  ].forEach(function(row, i){
+    var id = genId() + i;
+    measurables[id] = {name: row[0], owner: row[1], goal: row[2], order: i};
+  });
+  return {
+    owners: {owner1:"Owner 1", owner2:"Owner 2", owner3:"Owner 3"},
+    vto: {
+      coreValues: {},
+      purpose: "", niche: "", tenYearTarget: "",
+      targetMarket: "", threeUniques: "", provenProcess: "", guarantee: "",
+      threeYear: {futureDate:"", revenue:"", profit:"", measurables:"", lookLike:""},
+      oneYear: {futureDate:"", revenue:"", profit:"", goals:""}
+    },
+    rocks: {},
+    scorecard: {measurables: measurables, weekKeys: weekKeys, weekData: {}},
+    issues: {},
+    l10: {agenda: {}, headlines: {}, todos: {}, notes: ""},
+    updatedAt: serverTimestamp()
+  };
+}
+
+function getPath(obj, path){
+  var parts = path.split(".");
+  var cur = obj;
+  for (var i = 0; i < parts.length; i++){
+    if (cur == null) return undefined;
+    cur = cur[parts[i]];
+  }
+  return cur;
+}
+
+// ---------- firestore write helpers ----------
+function logErr(e){ console.error(e); }
+
+function writePatch(patch){
+  patch.updatedAt = serverTimestamp();
+  updateDoc(docRef, patch).catch(logErr);
+}
+
+var debounceTimers = {};
+function writeScalar(path, val){
+  clearTimeout(debounceTimers[path]);
+  debounceTimers[path] = setTimeout(function(){
+    var patch = {};
+    patch[path] = val;
+    writePatch(patch);
+  }, 450);
+}
+
+function addItem(basePath, data){
+  var id = genId();
+  setPath(state, basePath + "." + id, data);
+  render();
+  var patch = {};
+  patch[basePath + "." + id] = data;
+  writePatch(patch);
+  return id;
+}
+function updateItemField(basePath, id, field, val){
+  setPath(state, basePath + "." + id + "." + field, val);
+  var patch = {};
+  patch[basePath + "." + id + "." + field] = val;
+  clearTimeout(debounceTimers[basePath + "." + id + "." + field]);
+  debounceTimers[basePath + "." + id + "." + field] = setTimeout(function(){ writePatch(patch); }, 350);
+}
+function updateItemFieldNow(basePath, id, field, val){
+  setPath(state, basePath + "." + id + "." + field, val);
+  var patch = {};
+  patch[basePath + "." + id + "." + field] = val;
+  writePatch(patch);
+}
+function deleteItem(basePath, id){
+  var parts = basePath.split(".");
+  var cur = state;
+  for (var i = 0; i < parts.length; i++) cur = cur[parts[i]];
+  delete cur[id];
+  render();
+  var patch = {};
+  patch[basePath + "." + id] = deleteField();
+  writePatch(patch);
+}
+function setPath(obj, path, val){
+  var parts = path.split(".");
+  var cur = obj;
+  for (var i = 0; i < parts.length - 1; i++){
+    if (cur[parts[i]] == null) cur[parts[i]] = {};
+    cur = cur[parts[i]];
+  }
+  cur[parts[parts.length - 1]] = val;
+}
+
+// ---------- identity ----------
+var WHO_KEY = "eosWho";
+function getWho(){ try { return localStorage.getItem(WHO_KEY) || ""; } catch(e){ return ""; } }
+function setWho(slot){ try { localStorage.setItem(WHO_KEY, slot); } catch(e){} renderIdentity(); render(); }
+
+function ownerName(slot){
+  if (!slot) return "Unassigned";
+  if (slot === "team") return "Team";
+  return (state && state.owners && state.owners[slot]) || slot;
+}
+function ownerOptionsHtml(selected){
+  var opts = ['<option value="">Unassigned</option>'];
+  ["owner1","owner2","owner3"].forEach(function(slot){
+    opts.push('<option value="' + slot + '"' + (selected === slot ? " selected" : "") + '>' + esc(ownerName(slot)) + '</option>');
+  });
+  opts.push('<option value="team"' + (selected === "team" ? " selected" : "") + '>Team</option>');
+  return opts.join("");
+}
+function esc(s){
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+
+function renderIdentity(){
+  var who = getWho();
+  document.getElementById("whoName").textContent = who ? ownerName(who) : "—";
+}
+
+function showWhoModal(){
+  var opts = document.getElementById("whoOptions");
+  opts.innerHTML = "";
+  ["owner1","owner2","owner3"].forEach(function(slot){
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "who-btn";
+    btn.textContent = ownerName(slot);
+    btn.addEventListener("click", function(){
+      setWho(slot);
+      document.getElementById("whoModal").classList.add("hidden");
+    });
+    opts.appendChild(btn);
+  });
+  document.getElementById("whoModal").classList.remove("hidden");
+}
+document.getElementById("switchWho").addEventListener("click", showWhoModal);
+document.getElementById("whoModal").addEventListener("click", function(e){
+  if (e.target === document.getElementById("whoModal")) {
+    if (getWho()) document.getElementById("whoModal").classList.add("hidden");
+  }
+});
+
+// ---------- tabs ----------
+document.querySelectorAll(".tab").forEach(function(btn){
+  btn.addEventListener("click", function(){ activateTab(btn.getAttribute("data-tab")); });
+});
+function activateTab(name){
+  document.querySelectorAll(".tab").forEach(function(t){ t.classList.toggle("active", t.getAttribute("data-tab") === name); });
+  document.querySelectorAll(".tabpanel").forEach(function(p){ p.classList.toggle("active", p.id === "tab-" + name); });
+}
+document.querySelectorAll("[data-jump]").forEach(function(el){
+  el.addEventListener("click", function(e){ e.preventDefault(); activateTab(el.getAttribute("data-jump")); });
+});
+
+// ---------- focus preservation across re-renders ----------
+function captureFocus(){
+  var el = document.activeElement;
+  if (!el || !el.dataset || !el.dataset.path) return null;
+  var f = {path: el.dataset.path};
+  if (typeof el.selectionStart === "number") { f.selStart = el.selectionStart; f.selEnd = el.selectionEnd; }
+  return f;
+}
+function restoreFocus(f){
+  if (!f) return;
+  var el;
+  try { el = document.querySelector('[data-path="' + CSS.escape(f.path) + '"]'); } catch(e){ return; }
+  if (!el) return;
+  el.focus();
+  if (f.selStart != null && typeof el.setSelectionRange === "function"){
+    try { el.setSelectionRange(f.selStart, f.selEnd); } catch(e){}
+  }
+}
+
+// ---------- render ----------
+function render(){
+  if (!state) return;
+  var foc = captureFocus();
+  renderOwnerFields();
+  renderVTO();
+  renderRocks();
+  renderScorecard();
+  renderIssues();
+  renderL10();
+  restoreFocus(foc);
+}
+
+function bindScalar(id, path){
+  var el = document.getElementById(id);
+  if (document.activeElement === el) return;
+  var val = getPath(state, path) || "";
+  if (el.value !== val) el.value = val;
+}
+
+function renderOwnerFields(){
+  bindScalar("ownerInput1", "owners.owner1");
+  bindScalar("ownerInput2", "owners.owner2");
+  bindScalar("ownerInput3", "owners.owner3");
+}
+
+// ---------- VTO ----------
+function renderVTO(){
+  bindScalar("vtoPurpose", "vto.purpose");
+  bindScalar("vtoNiche", "vto.niche");
+  bindScalar("vtoTenYear", "vto.tenYearTarget");
+  bindScalar("vtoTargetMarket", "vto.targetMarket");
+  bindScalar("vtoThreeUniques", "vto.threeUniques");
+  bindScalar("vtoProvenProcess", "vto.provenProcess");
+  bindScalar("vtoGuarantee", "vto.guarantee");
+  bindScalar("vto3Date", "vto.threeYear.futureDate");
+  bindScalar("vto3Revenue", "vto.threeYear.revenue");
+  bindScalar("vto3Profit", "vto.threeYear.profit");
+  bindScalar("vto3Measurables", "vto.threeYear.measurables");
+  bindScalar("vto3LookLike", "vto.threeYear.lookLike");
+  bindScalar("vto1Date", "vto.oneYear.futureDate");
+  bindScalar("vto1Revenue", "vto.oneYear.revenue");
+  bindScalar("vto1Profit", "vto.oneYear.profit");
+  bindScalar("vto1Goals", "vto.oneYear.goals");
+
+  var list = document.getElementById("coreValuesList");
+  var values = state.vto.coreValues || {};
+  var ids = Object.keys(values).sort(function(a,b){ return (values[a].order||0) - (values[b].order||0); });
+  list.innerHTML = ids.map(function(id){
+    return '<li><input type="text" data-path="vto.coreValues.' + id + '.text" value="' + esc(values[id].text) + '" data-cv="' + id + '">' +
+      '<button class="icon-btn" type="button" data-del-cv="' + id + '" title="Remove">&times;</button></li>';
+  }).join("");
+  list.querySelectorAll("[data-cv]").forEach(function(inp){
+    inp.addEventListener("input", function(){ updateItemField("vto.coreValues", inp.getAttribute("data-cv"), "text", inp.value); });
+  });
+  list.querySelectorAll("[data-del-cv]").forEach(function(btn){
+    btn.addEventListener("click", function(){ deleteItem("vto.coreValues", btn.getAttribute("data-del-cv")); });
+  });
+
+  // quarter summary counts
+  var rocks = state.rocks || {};
+  var onTrack = 0, offTrack = 0;
+  Object.keys(rocks).forEach(function(id){
+    if (rocks[id].status === "ontrack") onTrack++;
+    if (rocks[id].status === "offtrack") offTrack++;
+  });
+  document.getElementById("sumRocksOnTrack").textContent = onTrack;
+  document.getElementById("sumRocksOffTrack").textContent = offTrack;
+  var issues = state.issues || {};
+  var openCount = 0;
+  Object.keys(issues).forEach(function(id){ if (issues[id].status !== "solved") openCount++; });
+  document.getElementById("sumIssuesOpen").textContent = openCount;
+}
+
+document.getElementById("addCoreValueBtn").addEventListener("click", function(){
+  var inp = document.getElementById("coreValueInput");
+  var text = inp.value.trim();
+  if (!text) return;
+  addItem("vto.coreValues", {text: text, order: Date.now()});
+  inp.value = "";
+});
+document.getElementById("coreValueInput").addEventListener("keydown", function(e){
+  if (e.key === "Enter") document.getElementById("addCoreValueBtn").click();
+});
+["ownerInput1","ownerInput2","ownerInput3"].forEach(function(id, i){
+  document.getElementById(id).addEventListener("input", function(){
+    writeScalar("owners.owner" + (i + 1), document.getElementById(id).value);
+  });
+});
+document.querySelectorAll('textarea[data-path], input[data-path]').forEach(function(el){
+  if (el.id.indexOf("ownerInput") === 0) return;
+  el.addEventListener("input", function(){ writeScalar(el.getAttribute("data-path"), el.value); });
+});
+
+// ---------- ROCKS ----------
+function renderRocks(){
+  var rocks = state.rocks || {};
+  var quarters = {};
+  Object.keys(rocks).forEach(function(id){ if (rocks[id].quarter) quarters[rocks[id].quarter] = true; });
+  quarters[currentQuarterLabel()] = true;
+  var qList = Object.keys(quarters).sort();
+  var filterSel = document.getElementById("rockQuarterFilter");
+  var prevVal = filterSel.value || currentQuarterLabel();
+  filterSel.innerHTML = '<option value="__all__">All quarters</option>' +
+    qList.map(function(q){ return '<option value="' + esc(q) + '">' + esc(q) + '</option>'; }).join("");
+  if ([].slice.call(filterSel.options).some(function(o){ return o.value === prevVal; })) filterSel.value = prevVal;
+  else filterSel.value = currentQuarterLabel();
+
+  document.getElementById("newRockOwner").innerHTML = ownerOptionsHtml(getWho());
+  if (!document.getElementById("newRockQuarter").value) document.getElementById("newRockQuarter").value = filterSel.value === "__all__" ? currentQuarterLabel() : filterSel.value;
+
+  var activeFilter = filterSel.value;
+  var ids = Object.keys(rocks).filter(function(id){ return activeFilter === "__all__" || rocks[id].quarter === activeFilter; });
+  ids.sort(function(a,b){ return (rocks[a].order||0) - (rocks[b].order||0); });
+
+  var listEl = document.getElementById("rockList");
+  if (!ids.length){
+    listEl.innerHTML = '<p class="hint">No Rocks yet for this filter. Add one above.</p>';
+    return;
+  }
+  listEl.innerHTML = ids.map(function(id){
+    var r = rocks[id];
+    return '<div class="rock-card">' +
+      '<input class="rock-title" type="text" data-path="rocks.' + id + '.title" value="' + esc(r.title) + '" data-rock-title="' + id + '">' +
+      '<span class="rock-quarter-tag">' + esc(r.quarter || "") + '</span>' +
+      '<select data-rock-owner="' + id + '">' + ownerOptionsHtml(r.owner) + '</select>' +
+      '<input type="date" value="' + esc(r.dueDate || "") + '" data-rock-due="' + id + '">' +
+      '<select data-rock-status="' + id + '">' +
+        '<option value="ontrack"' + (r.status === "ontrack" ? " selected" : "") + '>On Track</option>' +
+        '<option value="offtrack"' + (r.status === "offtrack" ? " selected" : "") + '>Off Track</option>' +
+        '<option value="done"' + (r.status === "done" ? " selected" : "") + '>Done</option>' +
+      '</select>' +
+      '<span class="pill ' + esc(r.status || "ontrack") + '">' + (r.status === "offtrack" ? "Off Track" : r.status === "done" ? "Done" : "On Track") + '</span>' +
+      '<button class="icon-btn" type="button" data-rock-del="' + id + '" title="Delete Rock">&times;</button>' +
+    '</div>';
+  }).join("");
+
+  listEl.querySelectorAll("[data-rock-title]").forEach(function(el){
+    el.addEventListener("input", function(){ updateItemField("rocks", el.getAttribute("data-rock-title"), "title", el.value); });
+  });
+  listEl.querySelectorAll("[data-rock-owner]").forEach(function(el){
+    el.addEventListener("change", function(){ updateItemFieldNow("rocks", el.getAttribute("data-rock-owner"), "owner", el.value); });
+  });
+  listEl.querySelectorAll("[data-rock-due]").forEach(function(el){
+    el.addEventListener("change", function(){ updateItemFieldNow("rocks", el.getAttribute("data-rock-due"), "dueDate", el.value); });
+  });
+  listEl.querySelectorAll("[data-rock-status]").forEach(function(el){
+    el.addEventListener("change", function(){ updateItemFieldNow("rocks", el.getAttribute("data-rock-status"), "status", el.value); });
+  });
+  listEl.querySelectorAll("[data-rock-del]").forEach(function(el){
+    el.addEventListener("click", function(){
+      if (confirm("Delete this Rock?")) deleteItem("rocks", el.getAttribute("data-rock-del"));
+    });
+  });
+}
+document.getElementById("rockQuarterFilter").addEventListener("change", renderRocks);
+document.getElementById("addRockBtn").addEventListener("click", function(){
+  var titleEl = document.getElementById("newRockTitle");
+  var title = titleEl.value.trim();
+  if (!title) return;
+  var quarter = document.getElementById("newRockQuarter").value.trim() || currentQuarterLabel();
+  var owner = document.getElementById("newRockOwner").value;
+  var due = document.getElementById("newRockDue").value;
+  addItem("rocks", {title: title, owner: owner, quarter: quarter, dueDate: due, status: "ontrack", order: Date.now()});
+  titleEl.value = "";
+  document.getElementById("newRockDue").value = "";
+});
+document.getElementById("newRockTitle").addEventListener("keydown", function(e){
+  if (e.key === "Enter") document.getElementById("addRockBtn").click();
+});
+
+// ---------- SCORECARD ----------
+function renderScorecard(){
+  document.getElementById("newMeasurableOwner").innerHTML = ownerOptionsHtml(getWho());
+
+  var sc = state.scorecard || {measurables:{}, weekKeys:{}, weekData:{}};
+  var measurables = sc.measurables || {};
+  var mIds = Object.keys(measurables).sort(function(a,b){ return (measurables[a].order||0) - (measurables[b].order||0); });
+  var weeks = Object.keys(sc.weekKeys || {}).sort();
+
+  var table = document.getElementById("scTable");
+  var thead = '<thead><tr><th style="text-align:left;">Measurable</th><th>Owner</th><th>Goal</th>' +
+    weeks.map(function(w){
+      return '<th>' + esc(w) + '<button class="week-del" type="button" data-week-del="' + w + '">remove</button></th>';
+    }).join("") + '</tr></thead>';
+
+  var rows = mIds.map(function(id){
+    var m = measurables[id];
+    var cells = weeks.map(function(w){
+      var val = (sc.weekData && sc.weekData[w] && sc.weekData[w][id] != null) ? sc.weekData[w][id] : "";
+      return '<td><input class="sc-cell" type="text" value="' + esc(val) + '" data-sc-cell="' + id + '|' + w + '" data-path="scorecard.weekData.' + w + '.' + id + '"></td>';
+    }).join("");
+    return '<tr>' +
+      '<td class="measurable-name-cell"><input type="text" value="' + esc(m.name) + '" data-sc-name="' + id + '" data-path="scorecard.measurables.' + id + '.name"></td>' +
+      '<td><select class="sc-owner" data-sc-owner="' + id + '">' + ownerOptionsHtml(m.owner) + '</select></td>' +
+      '<td><input class="sc-goal" type="text" value="' + esc(m.goal) + '" data-sc-goal="' + id + '" data-path="scorecard.measurables.' + id + '.goal"></td>' +
+      cells +
+      '<td><button class="icon-btn" type="button" data-sc-del="' + id + '" title="Delete row">&times;</button></td>' +
+    '</tr>';
+  }).join("");
+
+  table.innerHTML = thead + '<tbody>' + (rows || '<tr><td colspan="4" style="text-align:left;">No measurables yet — add one above.</td></tr>') + '</tbody>';
+
+  table.querySelectorAll("[data-sc-name]").forEach(function(el){
+    el.addEventListener("input", function(){ updateItemField("scorecard.measurables", el.getAttribute("data-sc-name"), "name", el.value); });
+  });
+  table.querySelectorAll("[data-sc-goal]").forEach(function(el){
+    el.addEventListener("input", function(){ updateItemField("scorecard.measurables", el.getAttribute("data-sc-goal"), "goal", el.value); });
+  });
+  table.querySelectorAll("[data-sc-owner]").forEach(function(el){
+    el.addEventListener("change", function(){ updateItemFieldNow("scorecard.measurables", el.getAttribute("data-sc-owner"), "owner", el.value); });
+  });
+  table.querySelectorAll("[data-sc-del]").forEach(function(el){
+    el.addEventListener("click", function(){
+      if (confirm("Delete this measurable row?")) deleteItem("scorecard.measurables", el.getAttribute("data-sc-del"));
+    });
+  });
+  table.querySelectorAll("[data-sc-cell]").forEach(function(el){
+    el.addEventListener("input", function(){
+      var parts = el.getAttribute("data-sc-cell").split("|");
+      var mId = parts[0], w = parts[1];
+      if (!sc.weekData) sc.weekData = {};
+      if (!sc.weekData[w]) sc.weekData[w] = {};
+      sc.weekData[w][mId] = el.value;
+      var path = "scorecard.weekData." + w + "." + mId;
+      clearTimeout(debounceTimers[path]);
+      debounceTimers[path] = setTimeout(function(){
+        var patch = {};
+        patch[path] = el.value;
+        writePatch(patch);
+      }, 350);
+    });
+  });
+  table.querySelectorAll("[data-week-del]").forEach(function(el){
+    el.addEventListener("click", function(){
+      var w = el.getAttribute("data-week-del");
+      if (!confirm("Remove the " + w + " column? This deletes that week's values.")) return;
+      delete sc.weekKeys[w];
+      if (sc.weekData) delete sc.weekData[w];
+      render();
+      var patch = {};
+      patch["scorecard.weekKeys." + w] = deleteField();
+      patch["scorecard.weekData." + w] = deleteField();
+      writePatch(patch);
+    });
+  });
+}
+document.getElementById("addMeasurableBtn").addEventListener("click", function(){
+  var nameEl = document.getElementById("newMeasurableName");
+  var name = nameEl.value.trim();
+  if (!name) return;
+  var owner = document.getElementById("newMeasurableOwner").value;
+  var goal = document.getElementById("newMeasurableGoal").value.trim();
+  addItem("scorecard.measurables", {name: name, owner: owner, goal: goal, order: Date.now()});
+  nameEl.value = "";
+  document.getElementById("newMeasurableGoal").value = "";
+});
+document.getElementById("newMeasurableName").addEventListener("keydown", function(e){
+  if (e.key === "Enter") document.getElementById("addMeasurableBtn").click();
+});
+document.getElementById("addWeekBtn").addEventListener("click", function(){
+  var sc = state.scorecard;
+  var existing = Object.keys(sc.weekKeys || {}).sort();
+  var last = existing.length ? new Date(existing[existing.length - 1]) : new Date();
+  var next = new Date(last.getFullYear(), last.getMonth(), last.getDate() + 7);
+  var key = isoDate(next);
+  if (sc.weekKeys[key]) { alert("That week is already on the board."); return; }
+  sc.weekKeys[key] = true;
+  render();
+  var patch = {};
+  patch["scorecard.weekKeys." + key] = true;
+  writePatch(patch);
+});
+
+// ---------- ISSUES ----------
+function renderIssues(){
+  document.getElementById("newIssueOwner").innerHTML = ownerOptionsHtml(getWho());
+  var issues = state.issues || {};
+  var ids = Object.keys(issues);
+  var openIds = ids.filter(function(id){ return issues[id].status !== "solved"; })
+    .sort(function(a,b){ return (issues[a].order||0) - (issues[b].order||0); });
+  var solvedIds = ids.filter(function(id){ return issues[id].status === "solved"; })
+    .sort(function(a,b){ return (issues[b].order||0) - (issues[a].order||0); });
+
+  function rowHtml(id, solved){
+    var it = issues[id];
+    return '<div class="issue-row' + (solved ? " solved" : "") + '">' +
+      (solved ? "" : '<span class="pill open">Open</span>') +
+      '<input class="issue-title" type="text" value="' + esc(it.title) + '" data-issue-title="' + id + '">' +
+      '<select data-issue-owner="' + id + '">' + ownerOptionsHtml(it.owner) + '</select>' +
+      (solved
+        ? '<button class="icon-btn" type="button" style="color:var(--steel);" data-issue-reopen="' + id + '" title="Reopen">&#8635;</button>'
+        : '<button class="add-btn" type="button" data-issue-solve="' + id + '">Solve</button>') +
+      '<button class="icon-btn" type="button" data-issue-del="' + id + '" title="Delete">&times;</button>' +
+    '</div>';
+  }
+
+  document.getElementById("openIssueList").innerHTML = openIds.length
+    ? openIds.map(function(id){ return rowHtml(id, false); }).join("")
+    : '<p class="hint">No open issues. Nice.</p>';
+  document.getElementById("solvedIssueList").innerHTML = solvedIds.map(function(id){ return rowHtml(id, true); }).join("");
+  document.getElementById("solvedToggle").textContent = (document.getElementById("solvedIssueList").classList.contains("hidden") ? "Show" : "Hide") + " solved issues (" + solvedIds.length + ")";
+
+  document.querySelectorAll("#openIssueList [data-issue-title], #solvedIssueList [data-issue-title]").forEach(function(el){
+    el.addEventListener("input", function(){ updateItemField("issues", el.getAttribute("data-issue-title"), "title", el.value); });
+  });
+  document.querySelectorAll("#openIssueList [data-issue-owner], #solvedIssueList [data-issue-owner]").forEach(function(el){
+    el.addEventListener("change", function(){ updateItemFieldNow("issues", el.getAttribute("data-issue-owner"), "owner", el.value); });
+  });
+  document.querySelectorAll("[data-issue-solve]").forEach(function(el){
+    el.addEventListener("click", function(){ updateItemFieldNow("issues", el.getAttribute("data-issue-solve"), "status", "solved"); });
+  });
+  document.querySelectorAll("[data-issue-reopen]").forEach(function(el){
+    el.addEventListener("click", function(){ updateItemFieldNow("issues", el.getAttribute("data-issue-reopen"), "status", "open"); });
+  });
+  document.querySelectorAll("[data-issue-del]").forEach(function(el){
+    el.addEventListener("click", function(){
+      if (confirm("Delete this issue?")) deleteItem("issues", el.getAttribute("data-issue-del"));
+    });
+  });
+}
+document.getElementById("solvedToggle").addEventListener("click", function(){
+  document.getElementById("solvedIssueList").classList.toggle("hidden");
+  renderIssues();
+});
+document.getElementById("addIssueBtn").addEventListener("click", function(){
+  var titleEl = document.getElementById("newIssueTitle");
+  var title = titleEl.value.trim();
+  if (!title) return;
+  var owner = document.getElementById("newIssueOwner").value;
+  addItem("issues", {title: title, owner: owner, status: "open", order: Date.now()});
+  titleEl.value = "";
+});
+document.getElementById("newIssueTitle").addEventListener("keydown", function(e){
+  if (e.key === "Enter") document.getElementById("addIssueBtn").click();
+});
+
+// ---------- L10 ----------
+function renderL10(){
+  var agenda = (state.l10 && state.l10.agenda) || {};
+  document.getElementById("agendaList").innerHTML = AGENDA_ITEMS.map(function(item){
+    var checked = !!agenda[item.id];
+    return '<li class="agenda-item' + (checked ? " checked" : "") + '">' +
+      '<input type="checkbox" ' + (checked ? "checked" : "") + ' data-agenda="' + item.id + '">' +
+      '<span class="agenda-label">' + esc(item.label) + '</span>' +
+      '<span class="agenda-min">' + esc(item.min) + '</span>' +
+    '</li>';
+  }).join("");
+  document.querySelectorAll("[data-agenda]").forEach(function(el){
+    el.onchange = function(){
+      var id = el.getAttribute("data-agenda");
+      setPath(state, "l10.agenda." + id, el.checked);
+      var patch = {};
+      patch["l10.agenda." + id] = el.checked;
+      writePatch(patch);
+      render();
+    };
+  });
+
+  document.getElementById("newTodoOwner").innerHTML = ownerOptionsHtml(getWho());
+  var todos = (state.l10 && state.l10.todos) || {};
+  var tIds = Object.keys(todos).sort(function(a,b){ return (todos[a].order||0) - (todos[b].order||0); });
+  document.getElementById("todoList").innerHTML = tIds.length ? tIds.map(function(id){
+    var t = todos[id];
+    return '<div class="todo-row' + (t.done ? " done" : "") + '">' +
+      '<input type="checkbox" ' + (t.done ? "checked" : "") + ' data-todo-done="' + id + '">' +
+      '<input class="todo-text" type="text" value="' + esc(t.text) + '" data-todo-text="' + id + '">' +
+      '<span class="todo-owner">' + esc(ownerName(t.owner)) + '</span>' +
+      '<button class="icon-btn" type="button" data-todo-del="' + id + '" title="Delete">&times;</button>' +
+    '</div>';
+  }).join("") : '<p class="hint">No open to-dos.</p>';
+
+  document.querySelectorAll("[data-todo-done]").forEach(function(el){
+    el.addEventListener("change", function(){ updateItemFieldNow("l10.todos", el.getAttribute("data-todo-done"), "done", el.checked); });
+  });
+  document.querySelectorAll("[data-todo-text]").forEach(function(el){
+    el.addEventListener("input", function(){ updateItemField("l10.todos", el.getAttribute("data-todo-text"), "text", el.value); });
+  });
+  document.querySelectorAll("[data-todo-del]").forEach(function(el){
+    el.addEventListener("click", function(){ deleteItem("l10.todos", el.getAttribute("data-todo-del")); });
+  });
+
+  var headlines = (state.l10 && state.l10.headlines) || {};
+  function headlineListHtml(kind){
+    var ids = Object.keys(headlines).filter(function(id){ return headlines[id].kind === kind; })
+      .sort(function(a,b){ return (headlines[a].order||0) - (headlines[b].order||0); });
+    return ids.map(function(id){
+      return '<li><span class="simple-list-text">' + esc(headlines[id].text) + '</span>' +
+        '<button class="icon-btn" type="button" data-hl-del="' + id + '">&times;</button></li>';
+    }).join("");
+  }
+  document.getElementById("customerHeadlineList").innerHTML = headlineListHtml("customer");
+  document.getElementById("employeeHeadlineList").innerHTML = headlineListHtml("employee");
+  document.querySelectorAll("[data-hl-del]").forEach(function(el){
+    el.addEventListener("click", function(){ deleteItem("l10.headlines", el.getAttribute("data-hl-del")); });
+  });
+
+  bindScalar("l10Notes", "l10.notes");
+}
+document.getElementById("addTodoBtn").addEventListener("click", function(){
+  var textEl = document.getElementById("newTodoText");
+  var text = textEl.value.trim();
+  if (!text) return;
+  var owner = document.getElementById("newTodoOwner").value;
+  addItem("l10.todos", {text: text, owner: owner, done: false, order: Date.now()});
+  textEl.value = "";
+});
+document.getElementById("newTodoText").addEventListener("keydown", function(e){
+  if (e.key === "Enter") document.getElementById("addTodoBtn").click();
+});
+document.getElementById("addCustomerHeadlineBtn").addEventListener("click", function(){
+  var el = document.getElementById("newCustomerHeadline");
+  if (!el.value.trim()) return;
+  addItem("l10.headlines", {text: el.value.trim(), kind: "customer", order: Date.now()});
+  el.value = "";
+});
+document.getElementById("addEmployeeHeadlineBtn").addEventListener("click", function(){
+  var el = document.getElementById("newEmployeeHeadline");
+  if (!el.value.trim()) return;
+  addItem("l10.headlines", {text: el.value.trim(), kind: "employee", order: Date.now()});
+  el.value = "";
+});
+document.getElementById("resetMeetingBtn").addEventListener("click", function(){
+  if (!confirm("Reset the meeting agenda and clear headlines/notes for everyone? To-dos are kept.")) return;
+  var patch = {};
+  AGENDA_ITEMS.forEach(function(item){ patch["l10.agenda." + item.id] = false; });
+  patch["l10.headlines"] = {};
+  patch["l10.notes"] = "";
+  state.l10.agenda = {};
+  state.l10.headlines = {};
+  state.l10.notes = "";
+  render();
+  writePatch(patch);
+});
+
+// ---------- share / status ----------
+var statusDot = document.getElementById("statusDot");
+var statusText = document.getElementById("statusText");
+function setStatus(kind, text){ statusDot.className = "status-dot " + kind; statusText.textContent = text; }
+
+document.getElementById("shareBtn").addEventListener("click", function(){
+  var btn = document.getElementById("shareBtn");
+  var defaultHTML = btn.innerHTML;
+  function showCopied(){
+    btn.textContent = "✓ Link copied";
+    btn.classList.add("share-copied");
+    setTimeout(function(){ btn.innerHTML = defaultHTML; btn.classList.remove("share-copied"); }, 1600);
+  }
+  var url = location.href;
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(showCopied).catch(function(){ window.prompt("Copy this link:", url); });
+  } else {
+    window.prompt("Copy this link:", url);
+  }
+});
+
+// ---------- live listener ----------
+setStatus("connecting", "Connecting…");
+onSnapshot(docRef, {includeMetadataChanges: true}, function(snap){
+  if (!snap.exists()){
+    if (!seeding){
+      seeding = true;
+      setDoc(docRef, seedDoc()).catch(function(e){ console.error(e); setStatus("error", "Couldn't connect"); });
+    }
+    return;
+  }
+  var data = snap.data();
+  state = {
+    owners: data.owners || {owner1:"Owner 1", owner2:"Owner 2", owner3:"Owner 3"},
+    vto: data.vto || {},
+    rocks: data.rocks || {},
+    scorecard: data.scorecard || {measurables:{}, weekKeys:{}, weekData:{}},
+    issues: data.issues || {},
+    l10: data.l10 || {agenda:{}, headlines:{}, todos:{}, notes:""}
+  };
+  if (!state.vto.threeYear) state.vto.threeYear = {};
+  if (!state.vto.oneYear) state.vto.oneYear = {};
+  renderIdentity();
+  render();
+  setStatus(snap.metadata.fromCache ? "offline" : "live", snap.metadata.fromCache ? "Offline — last synced state" : "Live");
+  if (!getWho()) showWhoModal();
+}, function(err){
+  console.error(err);
+  setStatus("error", "Connection error");
+});
+</script>
+</body>
+</html>
