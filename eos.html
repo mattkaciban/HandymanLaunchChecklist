@@ -81,8 +81,9 @@ a{color:var(--steel);}
 .topbar-spacer{flex:1;}
 .identity{font-size:13px;display:flex;align-items:center;gap:6px;opacity:.95;}
 .identity strong{color:var(--gold);}
-.identity button{background:transparent;border:1px solid rgba(255,255,255,.35);color:var(--navy-text);border-radius:6px;padding:3px 9px;font-size:12px;cursor:pointer;}
-.identity button:hover{background:rgba(255,255,255,.12);}
+.identity button,.linkbtn{background:transparent;border:1px solid rgba(255,255,255,.35);color:var(--navy-text);border-radius:6px;padding:3px 9px;font-size:12px;cursor:pointer;}
+.identity button:hover,.linkbtn:hover{background:rgba(255,255,255,.12);}
+.lastedit{font-size:11.5px;opacity:.75;}
 
 .status{display:flex;align-items:center;gap:6px;font-size:12.5px;opacity:.9;}
 .status-dot{width:9px;height:9px;border-radius:50%;background:#999;flex:none;}
@@ -116,7 +117,7 @@ main{max-width:1180px;margin:0 auto;padding:20px 16px 60px;}
 .card h2{margin:0 0 4px;font-size:16px;color:var(--navy);}
 .card h3{margin:0 0 8px;font-size:13.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;}
 .card .hint{font-size:12.5px;color:var(--text-muted);margin:0 0 12px;}
-@media (prefers-color-scheme: dark){ .card h2{color:var(--gold);} }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .card h2{color:var(--gold);} }
 :root[data-theme="dark"] .card h2{color:var(--gold);}
 
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
@@ -136,13 +137,17 @@ main{max-width:1180px;margin:0 auto;padding:20px 16px 60px;}
 .pill.offtrack{background:var(--danger-bg);color:var(--danger);}
 .pill.done{background:var(--steel-bg);color:var(--steel);}
 .pill.open{background:var(--warn-bg);color:var(--warn);}
-.pill.solved{background:var(--success-bg);color:var(--success);}
+.pill.rank{background:var(--navy);color:#fff;min-width:24px;text-align:center;}
+.pill.rank.top3{background:var(--gold);color:#2b1f06;}
 
 .values-list,.simple-list{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:6px;}
 .values-list li,.simple-list li{display:flex;align-items:center;gap:8px;}
 .values-list li input,.simple-list-text{flex:1;}
 .icon-btn{background:transparent;border:1px solid var(--border);border-radius:6px;width:28px;height:28px;flex:none;cursor:pointer;color:var(--danger);font-size:14px;line-height:1;}
 .icon-btn:hover{background:var(--danger-bg);}
+.icon-btn.neutral{color:var(--steel);}
+.icon-btn.neutral:hover{background:var(--steel-bg);}
+.icon-btn:disabled{opacity:.3;cursor:default;}
 .add-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
 .add-row input,.add-row select{flex:1;min-width:120px;}
 .add-btn{background:var(--steel);color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;flex:none;}
@@ -151,20 +156,34 @@ main{max-width:1180px;margin:0 auto;padding:20px 16px 60px;}
 .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
 .toolbar select{min-width:150px;}
 
+.owner-group{margin-bottom:18px;}
+.owner-group-head{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+.owner-group-head .name{font-weight:700;font-size:14px;}
+.owner-group-head .meta{font-size:12px;color:var(--text-muted);}
+
 .rock-list{display:flex;flex-direction:column;gap:8px;}
 .rock-card{border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface-alt);}
 .rock-card .rock-title{flex:2;min-width:180px;font-weight:600;border:1px solid transparent;background:transparent;padding:4px 6px;}
 .rock-card .rock-title:focus{background:var(--surface);border-color:var(--border);}
-.rock-card select,.rock-card input[type="date"]{min-width:0;}
-.rock-quarter-tag{font-size:11px;color:var(--text-muted);background:var(--surface-alt-2);padding:2px 8px;border-radius:999px;flex:none;}
+.rock-card .rock-quarter{width:96px;flex:none;font-size:12px;text-align:center;border:1px solid transparent;background:var(--surface-alt-2);border-radius:999px;padding:3px 8px;}
+.rock-card .rock-quarter:focus{background:var(--surface);border-color:var(--border);}
+.rock-card select.rock-status{font-weight:700;font-size:12.5px;}
+.rock-card select.rock-status.ontrack{background:var(--success-bg);color:var(--success);border-color:var(--success);}
+.rock-card select.rock-status.offtrack{background:var(--danger-bg);color:var(--danger);border-color:var(--danger);}
+.rock-card select.rock-status.done{background:var(--steel-bg);color:var(--steel);border-color:var(--steel);}
 
 .issue-row{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:8px;padding:8px 10px;background:var(--surface-alt);margin-bottom:6px;}
-.issue-row.solved{opacity:.6;}
+.issue-row.solved{opacity:.65;}
 .issue-row.solved .issue-title{text-decoration:line-through;}
 .issue-title{flex:1;border:1px solid transparent;background:transparent;padding:4px 6px;}
 .issue-title:focus{background:var(--surface);border-color:var(--border);}
+.issue-solved-at{font-size:11px;color:var(--text-muted);flex:none;}
 .solved-section{margin-top:14px;}
 .solved-toggle{background:transparent;border:none;color:var(--text-muted);font-size:12.5px;cursor:pointer;text-decoration:underline;padding:0;}
+.move-btns{display:flex;flex-direction:column;gap:1px;flex:none;}
+.move-btns button{background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:4px;width:22px;height:15px;font-size:9px;line-height:1;cursor:pointer;padding:0;}
+.move-btns button:hover:not(:disabled){background:var(--steel-bg);color:var(--steel);}
+.move-btns button:disabled{opacity:.3;cursor:default;}
 
 .sc-table-wrap{overflow-x:auto;}
 table.sc-table{border-collapse:collapse;width:100%;font-size:13px;}
@@ -174,16 +193,31 @@ table.sc-table td.measurable-name-cell{text-align:left;min-width:170px;}
 table.sc-table td.measurable-name-cell input{width:100%;border:none;background:transparent;font-weight:600;padding:2px 4px;}
 table.sc-table td.measurable-name-cell input:focus{background:var(--surface);border:1px solid var(--border);border-radius:4px;}
 table.sc-table select.sc-owner{width:100%;font-size:12px;}
-table.sc-table input.sc-goal{width:70px;text-align:center;}
+table.sc-table select.sc-dir{width:52px;font-size:12px;padding:4px 2px;}
+table.sc-table input.sc-goal{width:66px;text-align:center;}
 table.sc-table input.sc-cell{width:70px;text-align:center;}
+table.sc-table input.sc-cell.hit{background:var(--success-bg);color:var(--success);font-weight:700;border-color:var(--success);}
+table.sc-table input.sc-cell.miss{background:var(--danger-bg);color:var(--danger);font-weight:700;border-color:var(--danger);}
 table.sc-table th .week-del{background:transparent;border:none;color:var(--danger);cursor:pointer;font-size:11px;display:block;margin-top:2px;}
+.sc-legend{font-size:12px;color:var(--text-muted);margin-top:10px;display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
+.sc-legend .swatch{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-2px;}
+.sc-legend .swatch.hit{background:var(--success-bg);border:1px solid var(--success);}
+.sc-legend .swatch.miss{background:var(--danger-bg);border:1px solid var(--danger);}
 
 .agenda-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;}
-.agenda-item{display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:8px;padding:9px 12px;background:var(--surface-alt);}
+.agenda-item{display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:8px;padding:9px 12px;background:var(--surface-alt);flex-wrap:wrap;}
 .agenda-item.checked{background:var(--success-bg);border-color:var(--success);}
+.agenda-item.running{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-bg);}
 .agenda-item input[type="checkbox"]{width:18px;height:18px;flex:none;}
-.agenda-item .agenda-label{flex:1;font-weight:600;}
-.agenda-item .agenda-min{font-size:12px;color:var(--text-muted);}
+.agenda-item .agenda-label{flex:1;font-weight:600;min-width:150px;}
+.agenda-item .agenda-min{font-size:12px;color:var(--text-muted);flex:none;}
+.agenda-item .agenda-clock{font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;min-width:52px;text-align:right;flex:none;}
+.agenda-item .agenda-clock.over{color:var(--danger);}
+.timer-btn{background:var(--navy);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;flex:none;min-width:58px;}
+.timer-btn.pause{background:var(--gold);color:#2b1f06;}
+.meeting-total{display:flex;align-items:center;gap:10px;font-size:13px;margin-bottom:10px;flex-wrap:wrap;}
+.meeting-total .total-clock{font-variant-numeric:tabular-nums;font-weight:700;font-size:17px;}
+.meeting-total .total-clock.over{color:var(--danger);}
 
 .headline-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 @media (max-width:700px){ .headline-cols{grid-template-columns:1fr;} }
@@ -195,8 +229,17 @@ table.sc-table th .week-del{background:transparent;border:none;color:var(--dange
 .todo-text:focus{background:var(--surface);border-color:var(--border);}
 .todo-owner{font-size:11.5px;color:var(--text-muted);flex:none;min-width:0;}
 
+.rating-row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;}
+.rating-row .field{margin-bottom:0;min-width:120px;}
+.rating-avg{font-size:13px;color:var(--text-muted);}
+.rating-avg strong{font-size:20px;color:var(--navy);}
+:root[data-theme="dark"] .rating-avg strong{color:var(--gold);}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .rating-avg strong{color:var(--gold);} }
+
 .danger-btn{background:transparent;border:1px solid var(--danger);color:var(--danger);border-radius:6px;padding:6px 12px;font-size:12.5px;font-weight:600;cursor:pointer;}
 .danger-btn:hover{background:var(--danger-bg);}
+.ghost-btn{background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:6px;padding:6px 12px;font-size:12.5px;font-weight:600;cursor:pointer;}
+.ghost-btn:hover{background:var(--surface-alt);}
 
 .vto-summary-cards{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
 .vto-summary-card{flex:1;min-width:140px;border:1px solid var(--border);border-radius:8px;padding:10px 12px;background:var(--surface-alt);text-decoration:none;color:var(--text);display:block;}
@@ -207,7 +250,7 @@ table.sc-table th .week-del{background:transparent;border:none;color:var(--dange
 .vto-summary-card .lbl{font-size:12px;color:var(--text-muted);}
 
 .modal-overlay{position:fixed;inset:0;background:rgba(10,18,28,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px;}
-.modal{background:var(--surface);border-radius:12px;padding:22px 24px;max-width:420px;width:100%;box-shadow:var(--shadow);}
+.modal{background:var(--surface);border-radius:12px;padding:22px 24px;max-width:440px;width:100%;box-shadow:var(--shadow);}
 .modal h2{margin:0 0 6px;color:var(--navy);font-size:18px;}
 :root[data-theme="dark"] .modal h2{color:var(--gold);}
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .modal h2{color:var(--gold);} }
@@ -215,16 +258,49 @@ table.sc-table th .week-del{background:transparent;border:none;color:var(--dange
 .who-options{display:flex;flex-direction:column;gap:8px;}
 .who-btn{background:var(--surface-alt);border:1px solid var(--border);border-radius:8px;padding:11px 14px;font-size:14.5px;font-weight:600;text-align:left;cursor:pointer;color:var(--text);}
 .who-btn:hover{border-color:var(--steel);background:var(--steel-bg);}
+.signin-btn{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:12px 18px;font-size:15px;font-weight:600;cursor:pointer;width:100%;}
+.signin-btn:hover{filter:brightness(1.1);}
+.auth-error{color:var(--danger);font-size:13px;margin-top:12px;}
 
 .page-footer{max-width:1180px;margin:0 auto;padding:8px 16px 30px;font-size:11.5px;color:var(--text-muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+
+.print-mirror{display:none;}
+.print-only{display:none;}
+@media print{
+  .topbar,.tabs,.page-footer,.add-row,.icon-btn,.danger-btn,.ghost-btn,.topbtn,.modal-overlay,.vto-summary-cards,.move-btns{display:none!important;}
+  .tabpanel{display:none!important;}
+  #tab-vto{display:block!important;}
+  #tab-vto textarea,#tab-vto input[type="text"]{display:none!important;}
+  .print-mirror{display:block;white-space:pre-wrap;font-size:12.5px;min-height:1em;border-bottom:1px solid #ddd;padding:2px 0;}
+  .print-only{display:block;}
+  body{background:#fff;color:#000;}
+  main{max-width:none;padding:0;}
+  .card{box-shadow:none;border:1px solid #999;break-inside:avoid;margin-bottom:10px;}
+  .grid2{grid-template-columns:1fr 1fr;}
+}
 </style>
 </head>
 <body>
-<div id="app">
+
+<div id="authGate" class="modal-overlay">
+  <div class="modal">
+    <h2>EOS Framework</h2>
+    <p>Sign in with the Google account your co-owners added to this workspace. Only allowlisted accounts can open the plan.</p>
+    <button class="signin-btn" id="signInBtn" type="button">Sign in with Google</button>
+    <div class="auth-error hidden" id="authError"></div>
+  </div>
+</div>
+
+<div id="app" class="hidden">
   <header class="topbar">
     <div class="brand">🧭 EOS Framework <span class="brand-sub">Handy&rsquo;s Handyman Services</span></div>
     <div class="topbar-spacer"></div>
-    <div class="identity">Viewing as <strong id="whoName">—</strong> <button id="switchWho" type="button">Switch</button></div>
+    <div class="identity">
+      <span class="lastedit" id="lastEdit"></span>
+      Viewing as <strong id="whoName">—</strong>
+      <button id="switchWho" type="button">Switch</button>
+      <button id="signOutBtn" class="linkbtn" type="button">Sign out</button>
+    </div>
     <div class="status"><span id="statusDot" class="status-dot connecting"></span><span id="statusText">Connecting…</span></div>
     <button id="shareBtn" class="topbtn" type="button">Share link</button>
   </header>
@@ -241,7 +317,10 @@ table.sc-table th .week-del{background:transparent;border:none;color:var(--dange
     <!-- V/TO -->
     <section id="tab-vto" class="tabpanel active">
       <div class="card">
-        <h3>Team</h3>
+        <div class="toolbar">
+          <h3 style="margin:0;">Team</h3>
+          <button class="ghost-btn" id="printVtoBtn" type="button">🖨 Print V/TO</button>
+        </div>
         <p class="hint">Rename the three owner slots here — Rocks, to-dos, and issues can be assigned to whichever name you set.</p>
         <div class="owner-settings">
           <div class="field"><label>Owner 1</label><input type="text" data-path="owners.owner1" id="ownerInput1"></div>
@@ -315,11 +394,12 @@ table.sc-table th .week-del{background:transparent;border:none;color:var(--dange
           </div>
 
           <div class="card">
-            <h2>This Quarter, At a Glance</h2>
-            <p class="hint">Live counts from the Rocks and Issues List tabs.</p>
+            <h2 id="quarterGlanceTitle">This Quarter, At a Glance</h2>
+            <p class="hint">Live counts for the current quarter, from the Rocks and Issues List tabs.</p>
             <div class="vto-summary-cards">
               <a href="#" class="vto-summary-card" data-jump="rocks"><div class="num" id="sumRocksOnTrack">0</div><div class="lbl">Rocks on track</div></a>
               <a href="#" class="vto-summary-card" data-jump="rocks"><div class="num" id="sumRocksOffTrack">0</div><div class="lbl">Rocks off track</div></a>
+              <a href="#" class="vto-summary-card" data-jump="rocks"><div class="num" id="sumRocksDone">0</div><div class="lbl">Rocks done</div></a>
               <a href="#" class="vto-summary-card" data-jump="issues"><div class="num" id="sumIssuesOpen">0</div><div class="lbl">Open issues</div></a>
             </div>
           </div>
@@ -342,7 +422,7 @@ table.sc-table th .week-del{background:transparent;border:none;color:var(--dange
             <button class="add-btn" id="addRockBtn" type="button">Add Rock</button>
           </div>
         </div>
-        <div class="rock-list" id="rockList"></div>
+        <div id="rockGroups"></div>
       </div>
     </section>
 
@@ -350,16 +430,25 @@ table.sc-table th .week-del{background:transparent;border:none;color:var(--dange
     <section id="tab-scorecard" class="tabpanel">
       <div class="card">
         <h2>Scorecard</h2>
-        <p class="hint">5–15 weekly numbers that predict the health of the business. Add a measurable, then fill in each week.</p>
+        <p class="hint">5–15 weekly numbers that predict the health of the business. Set a goal and a direction (≥ or ≤) and each week colors itself green or red.</p>
         <div class="add-row" style="margin-bottom:14px;">
           <input type="text" id="newMeasurableName" placeholder="Measurable name (e.g., Leads Booked)">
           <select id="newMeasurableOwner"></select>
+          <select id="newMeasurableDir" style="max-width:70px;flex:none;">
+            <option value="gte">≥</option>
+            <option value="lte">≤</option>
+          </select>
           <input type="text" id="newMeasurableGoal" placeholder="Goal" style="max-width:100px;">
           <button class="add-btn" id="addMeasurableBtn" type="button">Add Measurable</button>
           <button class="add-btn" id="addWeekBtn" type="button" style="background:var(--navy);">+ Add Week</button>
         </div>
         <div class="sc-table-wrap">
           <table class="sc-table" id="scTable"></table>
+        </div>
+        <div class="sc-legend">
+          <span><span class="swatch hit"></span>Goal met</span>
+          <span><span class="swatch miss"></span>Goal missed</span>
+          <span>≥ = higher is better &nbsp;·&nbsp; ≤ = lower is better &nbsp;·&nbsp; non-numeric values aren't scored</span>
         </div>
       </div>
     </section>
@@ -368,7 +457,7 @@ table.sc-table th .week-del{background:transparent;border:none;color:var(--dange
     <section id="tab-issues" class="tabpanel">
       <div class="card">
         <h2>Issues List</h2>
-        <p class="hint">Identify, Discuss, Solve. Anything blocking the business goes here — real issues, once, solved for good.</p>
+        <p class="hint">Identify, Discuss, Solve. Rank the list first — the top 3 (gold) are what you actually work in the meeting.</p>
         <div class="add-row" style="margin-bottom:14px;">
           <input type="text" id="newIssueTitle" placeholder="New issue...">
           <select id="newIssueOwner"></select>
@@ -387,9 +476,18 @@ table.sc-table th .week-del{background:transparent;border:none;color:var(--dange
       <div class="card">
         <div class="toolbar">
           <h2 style="margin:0;">Level 10 Meeting Agenda</h2>
-          <button class="danger-btn" id="resetMeetingBtn" type="button">Reset for next meeting</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="ghost-btn" id="resetTimerBtn" type="button">Reset timers</button>
+            <button class="danger-btn" id="resetMeetingBtn" type="button">Reset for next meeting</button>
+          </div>
         </div>
-        <p class="hint">Check off each segment live as your weekly 90-minute meeting progresses — everyone sees it move in real time.</p>
+        <div class="meeting-total">
+          <span>Meeting total:</span>
+          <span class="total-clock" id="totalClock">0:00</span>
+          <span class="agenda-min">/ 90:00 target</span>
+          <span id="runningLabel" class="agenda-min"></span>
+        </div>
+        <p class="hint">Start the clock on each segment as you go — the timer is shared, so all three of you see the same countdown.</p>
         <ul class="agenda-list" id="agendaList"></ul>
       </div>
 
@@ -425,6 +523,12 @@ table.sc-table th .week-del{background:transparent;border:none;color:var(--dange
         <h2>IDS Notes</h2>
         <textarea id="l10Notes" data-path="l10.notes" style="min-height:100px;" placeholder="Notes from Identify, Discuss, Solve..."></textarea>
       </div>
+
+      <div class="card">
+        <h2>Conclude — Rate the Meeting</h2>
+        <p class="hint">Each owner rates the meeting 1–10. Anything under 8 gets discussed before you leave.</p>
+        <div class="rating-row" id="ratingRow"></div>
+      </div>
     </section>
   </main>
 
@@ -437,7 +541,7 @@ table.sc-table th .week-del{background:transparent;border:none;color:var(--dange
 <div id="whoModal" class="modal-overlay hidden">
   <div class="modal">
     <h2>Who's viewing?</h2>
-    <p>Pick your name so Rocks, to-dos, and issues default to you. You can switch anytime from the top bar, and rename these slots from the V/TO tab.</p>
+    <p>Pick your name so Rocks, to-dos, and issues default to you. We'll remember it for this Google account on every device.</p>
     <div class="who-options" id="whoOptions"></div>
   </div>
 </div>
@@ -447,6 +551,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/fireba
 import {
   getFirestore, doc, setDoc, updateDoc, onSnapshot, serverTimestamp, deleteField
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBwjICGSORc1foiMBsYaJj9SS4kby1q4ME",
@@ -459,21 +566,27 @@ const firebaseConfig = {
 
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
+const auth = getAuth(fbApp);
 const docRef = doc(db, "eos", "main");
 
-// ---------- state ----------
+// Who may read/write is enforced by the Firestore security rules, not here —
+// keeping the allowlist server-side avoids publishing owner emails in a public repo.
+
 var state = null;
 var seeding = false;
+var currentUser = null;
+var appStarted = false;
 
 var AGENDA_ITEMS = [
-  {id:"segue", label:"Segue", min:"5 min"},
-  {id:"scorecard", label:"Scorecard Review", min:"5 min"},
-  {id:"rocks", label:"Rock Review", min:"5 min"},
-  {id:"headlines", label:"Customer / Employee Headlines", min:"5 min"},
-  {id:"todos", label:"To-Do List Review", min:"5 min"},
-  {id:"ids", label:"IDS — Identify, Discuss, Solve", min:"60 min"},
-  {id:"conclude", label:"Conclude — recap to-dos, rate the meeting", min:"5 min"}
+  {id:"segue", label:"Segue", min:5},
+  {id:"scorecard", label:"Scorecard Review", min:5},
+  {id:"rocks", label:"Rock Review", min:5},
+  {id:"headlines", label:"Customer / Employee Headlines", min:5},
+  {id:"todos", label:"To-Do List Review", min:5},
+  {id:"ids", label:"IDS — Identify, Discuss, Solve", min:60},
+  {id:"conclude", label:"Conclude — recap to-dos, rate the meeting", min:5}
 ];
+var MEETING_TARGET_SECONDS = 90 * 60;
 
 function genId(){ return "x" + Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
 
@@ -481,36 +594,39 @@ function recentMondays(n){
   var out = [];
   var d = new Date();
   var day = d.getDay();
-  var diffToMonday = (day === 0 ? -6 : 1 - day);
-  var monday = new Date(d.getFullYear(), d.getMonth(), d.getDate() + diffToMonday);
+  var monday = new Date(d.getFullYear(), d.getMonth(), d.getDate() + (day === 0 ? -6 : 1 - day));
   for (var i = n - 1; i >= 0; i--){
-    var wd = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() - 7 * i);
-    out.push(isoDate(wd));
+    out.push(isoDate(new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() - 7 * i)));
   }
   return out;
 }
 function isoDate(d){
-  var m = ("0" + (d.getMonth() + 1)).slice(-2);
-  var day = ("0" + d.getDate()).slice(-2);
-  return d.getFullYear() + "-" + m + "-" + day;
+  return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
 }
 function currentQuarterLabel(){
   var d = new Date();
   return "Q" + (Math.floor(d.getMonth() / 3) + 1) + " " + d.getFullYear();
+}
+function fmtClock(totalSeconds){
+  var s = Math.max(0, Math.floor(totalSeconds));
+  return Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2);
+}
+function fmtDate(ms){
+  if (!ms) return "";
+  var d = new Date(ms);
+  return (d.getMonth() + 1) + "/" + d.getDate() + "/" + String(d.getFullYear()).slice(-2);
 }
 
 function seedDoc(){
   var weekKeys = {};
   recentMondays(4).forEach(function(k){ weekKeys[k] = true; });
   var measurables = {};
-  [
-    ["Leads Received","",""],["Jobs Booked","",""],["Revenue Invoiced ($)","",""],["5-Star Reviews","",""]
-  ].forEach(function(row, i){
-    var id = genId() + i;
-    measurables[id] = {name: row[0], owner: row[1], goal: row[2], order: i};
+  ["Leads Received","Jobs Booked","Revenue Invoiced ($)","5-Star Reviews"].forEach(function(name, i){
+    measurables[genId() + i] = {name: name, owner: "", goal: "", direction: "gte", order: i};
   });
   return {
     owners: {owner1:"Owner 1", owner2:"Owner 2", owner3:"Owner 3"},
+    slotByUid: {},
     vto: {
       coreValues: {},
       purpose: "", niche: "", tenYearTarget: "",
@@ -521,7 +637,7 @@ function seedDoc(){
     rocks: {},
     scorecard: {measurables: measurables, weekKeys: weekKeys, weekData: {}},
     issues: {},
-    l10: {agenda: {}, headlines: {}, todos: {}, notes: ""},
+    l10: {agenda: {}, headlines: {}, todos: {}, notes: "", timer: {active: null, startedAt: null, elapsed: {}}, ratings: {}},
     updatedAt: serverTimestamp()
   };
 }
@@ -535,57 +651,6 @@ function getPath(obj, path){
   }
   return cur;
 }
-
-// ---------- firestore write helpers ----------
-function logErr(e){ console.error(e); }
-
-function writePatch(patch){
-  patch.updatedAt = serverTimestamp();
-  updateDoc(docRef, patch).catch(logErr);
-}
-
-var debounceTimers = {};
-function writeScalar(path, val){
-  clearTimeout(debounceTimers[path]);
-  debounceTimers[path] = setTimeout(function(){
-    var patch = {};
-    patch[path] = val;
-    writePatch(patch);
-  }, 450);
-}
-
-function addItem(basePath, data){
-  var id = genId();
-  setPath(state, basePath + "." + id, data);
-  render();
-  var patch = {};
-  patch[basePath + "." + id] = data;
-  writePatch(patch);
-  return id;
-}
-function updateItemField(basePath, id, field, val){
-  setPath(state, basePath + "." + id + "." + field, val);
-  var patch = {};
-  patch[basePath + "." + id + "." + field] = val;
-  clearTimeout(debounceTimers[basePath + "." + id + "." + field]);
-  debounceTimers[basePath + "." + id + "." + field] = setTimeout(function(){ writePatch(patch); }, 350);
-}
-function updateItemFieldNow(basePath, id, field, val){
-  setPath(state, basePath + "." + id + "." + field, val);
-  var patch = {};
-  patch[basePath + "." + id + "." + field] = val;
-  writePatch(patch);
-}
-function deleteItem(basePath, id){
-  var parts = basePath.split(".");
-  var cur = state;
-  for (var i = 0; i < parts.length; i++) cur = cur[parts[i]];
-  delete cur[id];
-  render();
-  var patch = {};
-  patch[basePath + "." + id] = deleteField();
-  writePatch(patch);
-}
 function setPath(obj, path, val){
   var parts = path.split(".");
   var cur = obj;
@@ -596,11 +661,90 @@ function setPath(obj, path, val){
   cur[parts[parts.length - 1]] = val;
 }
 
+// ---------- firestore writes ----------
+function writeFailed(e){
+  console.error(e);
+  setStatus("error", "Couldn't save — check connection");
+}
+function writePatch(patch){
+  patch.updatedAt = serverTimestamp();
+  var who = getWho();
+  if (who) patch.lastEditor = who;
+  updateDoc(docRef, patch).catch(writeFailed);
+}
+
+var debounceTimers = {};
+// Edits typed since the last flush. A snapshot carries whatever was written ~400ms ago,
+// so without re-applying these on top, every ack would roll back the keystrokes after it.
+var pendingEdits = {};
+function debouncedPatch(key, patch, ms){
+  Object.keys(patch).forEach(function(p){ pendingEdits[p] = patch[p]; });
+  clearTimeout(debounceTimers[key]);
+  debounceTimers[key] = setTimeout(function(){
+    Object.keys(patch).forEach(function(p){ delete pendingEdits[p]; });
+    writePatch(patch);
+  }, ms || 400);
+}
+function writeScalar(path, val){
+  var patch = {};
+  patch[path] = val;
+  setPath(state, path, val);
+  debouncedPatch(path, patch);
+}
+function addItem(basePath, data){
+  var id = genId();
+  setPath(state, basePath + "." + id, data);
+  render(true);
+  var patch = {};
+  patch[basePath + "." + id] = data;
+  writePatch(patch);
+  return id;
+}
+function updateItemField(basePath, id, field, val){
+  var path = basePath + "." + id + "." + field;
+  setPath(state, path, val);
+  var patch = {};
+  patch[path] = val;
+  debouncedPatch(path, patch, 350);
+}
+function updateItemFieldNow(basePath, id, field, val){
+  var path = basePath + "." + id + "." + field;
+  setPath(state, path, val);
+  var patch = {};
+  patch[path] = val;
+  writePatch(patch);
+}
+function deleteItem(basePath, id, extraPaths){
+  var parts = basePath.split(".");
+  var cur = state;
+  for (var i = 0; i < parts.length; i++) cur = cur[parts[i]];
+  delete cur[id];
+  var patch = {};
+  patch[basePath + "." + id] = deleteField();
+  (extraPaths || []).forEach(function(p){ patch[p] = deleteField(); });
+  render(true);
+  writePatch(patch);
+}
+
 // ---------- identity ----------
 var WHO_KEY = "eosWho";
-function getWho(){ try { return localStorage.getItem(WHO_KEY) || ""; } catch(e){ return ""; } }
-function setWho(slot){ try { localStorage.setItem(WHO_KEY, slot); } catch(e){} renderIdentity(); render(); }
-
+function getWho(){
+  if (state && currentUser && state.slotByUid && state.slotByUid[currentUser.uid]) {
+    return state.slotByUid[currentUser.uid];
+  }
+  try { return localStorage.getItem(WHO_KEY) || ""; } catch(e){ return ""; }
+}
+function setWho(slot){
+  try { localStorage.setItem(WHO_KEY, slot); } catch(e){}
+  if (currentUser){
+    setPath(state, "slotByUid." + currentUser.uid, slot);
+    var patch = {};
+    patch["slotByUid." + currentUser.uid] = slot;
+    writePatch(patch);
+  }
+  renderIdentity();
+  render(true);
+}
 function ownerName(slot){
   if (!slot) return "Unassigned";
   if (slot === "team") return "Team";
@@ -624,6 +768,14 @@ function renderIdentity(){
   var who = getWho();
   document.getElementById("whoName").textContent = who ? ownerName(who) : "—";
 }
+function renderLastEdit(data){
+  var el = document.getElementById("lastEdit");
+  if (!data || !data.updatedAt || !data.updatedAt.toDate){ el.textContent = ""; return; }
+  var when = data.updatedAt.toDate();
+  var editor = data.lastEditor ? ownerName(data.lastEditor) : "";
+  var time = when.toLocaleTimeString([], {hour: "numeric", minute: "2-digit"});
+  el.textContent = editor ? ("Last edit: " + editor + " · " + time) : ("Last edit: " + time);
+}
 
 function showWhoModal(){
   var opts = document.getElementById("whoOptions");
@@ -643,8 +795,8 @@ function showWhoModal(){
 }
 document.getElementById("switchWho").addEventListener("click", showWhoModal);
 document.getElementById("whoModal").addEventListener("click", function(e){
-  if (e.target === document.getElementById("whoModal")) {
-    if (getWho()) document.getElementById("whoModal").classList.add("hidden");
+  if (e.target === document.getElementById("whoModal") && getWho()) {
+    document.getElementById("whoModal").classList.add("hidden");
   }
 });
 
@@ -665,7 +817,7 @@ function captureFocus(){
   var el = document.activeElement;
   if (!el || !el.dataset || !el.dataset.path) return null;
   var f = {path: el.dataset.path};
-  if (typeof el.selectionStart === "number") { f.selStart = el.selectionStart; f.selEnd = el.selectionEnd; }
+  if (typeof el.selectionStart === "number"){ f.selStart = el.selectionStart; f.selEnd = el.selectionEnd; }
   return f;
 }
 function restoreFocus(f){
@@ -680,8 +832,35 @@ function restoreFocus(f){
 }
 
 // ---------- render ----------
-function render(){
+// A remote update must never rebuild the field someone is typing in: a keystroke landing
+// between teardown and focus-restore is lost outright. Defer those renders to blur.
+// Local actions (add/delete/reorder) pass force=true — the user just clicked, so nothing is in flight.
+var deferredRender = false;
+function isTypingTarget(el){
+  if (!el) return false;
+  if (el.tagName === "TEXTAREA") return true;
+  return el.tagName === "INPUT" && ["text","date","number",""].indexOf(el.type || "") !== -1;
+}
+document.addEventListener("focusout", function(){
+  if (!deferredRender) return;
+  deferredRender = false;
+  setTimeout(function(){ render(true); }, 0);
+});
+// Someone can park the cursor in a field and walk away — flush once they've stopped typing
+// so a co-owner's changes still show up.
+var idleFlushTimer = null;
+document.addEventListener("input", function(){
+  clearTimeout(idleFlushTimer);
+  idleFlushTimer = setTimeout(function(){
+    if (!deferredRender) return;
+    deferredRender = false;
+    render(true);
+  }, 1200);
+});
+
+function render(force){
   if (!state) return;
+  if (!force && isTypingTarget(document.activeElement)){ deferredRender = true; return; }
   var foc = captureFocus();
   renderOwnerFields();
   renderVTO();
@@ -698,7 +877,6 @@ function bindScalar(id, path){
   var val = getPath(state, path) || "";
   if (el.value !== val) el.value = val;
 }
-
 function renderOwnerFields(){
   bindScalar("ownerInput1", "owners.owner1");
   bindScalar("ownerInput2", "owners.owner2");
@@ -738,15 +916,19 @@ function renderVTO(){
     btn.addEventListener("click", function(){ deleteItem("vto.coreValues", btn.getAttribute("data-del-cv")); });
   });
 
-  // quarter summary counts
+  var q = currentQuarterLabel();
+  document.getElementById("quarterGlanceTitle").textContent = q + ", At a Glance";
   var rocks = state.rocks || {};
-  var onTrack = 0, offTrack = 0;
+  var counts = {ontrack: 0, offtrack: 0, done: 0};
   Object.keys(rocks).forEach(function(id){
-    if (rocks[id].status === "ontrack") onTrack++;
-    if (rocks[id].status === "offtrack") offTrack++;
+    if (rocks[id].quarter !== q) return;
+    var s = rocks[id].status || "ontrack";
+    if (counts[s] != null) counts[s]++;
   });
-  document.getElementById("sumRocksOnTrack").textContent = onTrack;
-  document.getElementById("sumRocksOffTrack").textContent = offTrack;
+  document.getElementById("sumRocksOnTrack").textContent = counts.ontrack;
+  document.getElementById("sumRocksOffTrack").textContent = counts.offtrack;
+  document.getElementById("sumRocksDone").textContent = counts.done;
+
   var issues = state.issues || {};
   var openCount = 0;
   Object.keys(issues).forEach(function(id){ if (issues[id].status !== "solved") openCount++; });
@@ -755,170 +937,272 @@ function renderVTO(){
 
 document.getElementById("addCoreValueBtn").addEventListener("click", function(){
   var inp = document.getElementById("coreValueInput");
-  var text = inp.value.trim();
-  if (!text) return;
-  addItem("vto.coreValues", {text: text, order: Date.now()});
+  if (!inp.value.trim()) return;
+  addItem("vto.coreValues", {text: inp.value.trim(), order: Date.now()});
   inp.value = "";
 });
 document.getElementById("coreValueInput").addEventListener("keydown", function(e){
   if (e.key === "Enter") document.getElementById("addCoreValueBtn").click();
 });
-["ownerInput1","ownerInput2","ownerInput3"].forEach(function(id, i){
-  document.getElementById(id).addEventListener("input", function(){
-    writeScalar("owners.owner" + (i + 1), document.getElementById(id).value);
-  });
-});
-document.querySelectorAll('textarea[data-path], input[data-path]').forEach(function(el){
-  if (el.id.indexOf("ownerInput") === 0) return;
+document.querySelectorAll('#tab-vto textarea[data-path], #tab-vto input[data-path], #l10Notes').forEach(function(el){
   el.addEventListener("input", function(){ writeScalar(el.getAttribute("data-path"), el.value); });
 });
 
+document.getElementById("printVtoBtn").addEventListener("click", function(){ window.print(); });
+window.addEventListener("beforeprint", syncPrintMirrors);
+function syncPrintMirrors(){
+  document.querySelectorAll('#tab-vto textarea, #tab-vto input[type="text"]').forEach(function(el){
+    var mirror = el.nextElementSibling;
+    if (!mirror || !mirror.classList.contains("print-mirror")){
+      mirror = document.createElement("div");
+      mirror.className = "print-mirror";
+      el.parentNode.insertBefore(mirror, el.nextSibling);
+    }
+    mirror.textContent = el.value;
+  });
+}
+
 // ---------- ROCKS ----------
+var pendingFilterSelection = null;
 function renderRocks(){
   var rocks = state.rocks || {};
   var quarters = {};
   Object.keys(rocks).forEach(function(id){ if (rocks[id].quarter) quarters[rocks[id].quarter] = true; });
   quarters[currentQuarterLabel()] = true;
-  var qList = Object.keys(quarters).sort();
+
   var filterSel = document.getElementById("rockQuarterFilter");
-  var prevVal = filterSel.value || currentQuarterLabel();
+  var wanted = pendingFilterSelection || filterSel.value || currentQuarterLabel();
+  pendingFilterSelection = null;
+  if (wanted !== "__all__") quarters[wanted] = true;
   filterSel.innerHTML = '<option value="__all__">All quarters</option>' +
-    qList.map(function(q){ return '<option value="' + esc(q) + '">' + esc(q) + '</option>'; }).join("");
-  if ([].slice.call(filterSel.options).some(function(o){ return o.value === prevVal; })) filterSel.value = prevVal;
-  else filterSel.value = currentQuarterLabel();
+    Object.keys(quarters).sort().map(function(q){ return '<option value="' + esc(q) + '">' + esc(q) + '</option>'; }).join("");
+  filterSel.value = [].slice.call(filterSel.options).some(function(o){ return o.value === wanted; }) ? wanted : currentQuarterLabel();
 
   document.getElementById("newRockOwner").innerHTML = ownerOptionsHtml(getWho());
-  if (!document.getElementById("newRockQuarter").value) document.getElementById("newRockQuarter").value = filterSel.value === "__all__" ? currentQuarterLabel() : filterSel.value;
+  var quarterInput = document.getElementById("newRockQuarter");
+  if (!quarterInput.value && document.activeElement !== quarterInput){
+    quarterInput.value = filterSel.value === "__all__" ? currentQuarterLabel() : filterSel.value;
+  }
 
+  // A row being edited stays put even if its quarter no longer matches the filter,
+  // otherwise it disappears out from under the cursor mid-edit.
+  var editingId = focusedRockId();
   var activeFilter = filterSel.value;
-  var ids = Object.keys(rocks).filter(function(id){ return activeFilter === "__all__" || rocks[id].quarter === activeFilter; });
+  var ids = Object.keys(rocks).filter(function(id){
+    return activeFilter === "__all__" || rocks[id].quarter === activeFilter || id === editingId;
+  });
   ids.sort(function(a,b){ return (rocks[a].order||0) - (rocks[b].order||0); });
 
-  var listEl = document.getElementById("rockList");
+  var groupsEl = document.getElementById("rockGroups");
   if (!ids.length){
-    listEl.innerHTML = '<p class="hint">No Rocks yet for this filter. Add one above.</p>';
+    groupsEl.innerHTML = '<p class="hint">No Rocks yet for this filter. Add one above.</p>';
     return;
   }
-  listEl.innerHTML = ids.map(function(id){
-    var r = rocks[id];
-    return '<div class="rock-card">' +
-      '<input class="rock-title" type="text" data-path="rocks.' + id + '.title" value="' + esc(r.title) + '" data-rock-title="' + id + '">' +
-      '<span class="rock-quarter-tag">' + esc(r.quarter || "") + '</span>' +
-      '<select data-rock-owner="' + id + '">' + ownerOptionsHtml(r.owner) + '</select>' +
-      '<input type="date" value="' + esc(r.dueDate || "") + '" data-rock-due="' + id + '">' +
-      '<select data-rock-status="' + id + '">' +
-        '<option value="ontrack"' + (r.status === "ontrack" ? " selected" : "") + '>On Track</option>' +
-        '<option value="offtrack"' + (r.status === "offtrack" ? " selected" : "") + '>Off Track</option>' +
-        '<option value="done"' + (r.status === "done" ? " selected" : "") + '>Done</option>' +
-      '</select>' +
-      '<span class="pill ' + esc(r.status || "ontrack") + '">' + (r.status === "offtrack" ? "Off Track" : r.status === "done" ? "Done" : "On Track") + '</span>' +
-      '<button class="icon-btn" type="button" data-rock-del="' + id + '" title="Delete Rock">&times;</button>' +
+
+  var groupOrder = ["owner1","owner2","owner3","team",""];
+  var byOwner = {};
+  groupOrder.forEach(function(slot){ byOwner[slot] = []; });
+  ids.forEach(function(id){
+    var slot = rocks[id].owner || "";
+    if (!byOwner[slot]) byOwner[slot] = [];
+    byOwner[slot].push(id);
+  });
+
+  groupsEl.innerHTML = groupOrder.filter(function(slot){ return byOwner[slot] && byOwner[slot].length; }).map(function(slot){
+    var groupIds = byOwner[slot];
+    var onTrack = groupIds.filter(function(id){ return (rocks[id].status || "ontrack") === "ontrack"; }).length;
+    var done = groupIds.filter(function(id){ return rocks[id].status === "done"; }).length;
+    return '<div class="owner-group">' +
+      '<div class="owner-group-head"><span class="name">' + esc(ownerName(slot)) + '</span>' +
+      '<span class="meta">' + groupIds.length + ' rock' + (groupIds.length === 1 ? "" : "s") +
+      ' · ' + onTrack + ' on track · ' + done + ' done</span></div>' +
+      '<div class="rock-list">' + groupIds.map(rockCardHtml).join("") + '</div>' +
     '</div>';
   }).join("");
 
-  listEl.querySelectorAll("[data-rock-title]").forEach(function(el){
+  wireRockRows(groupsEl);
+}
+function focusedRockId(){
+  var el = document.activeElement;
+  if (!el || !el.dataset || !el.dataset.path) return null;
+  var m = /^rocks\.([^.]+)\./.exec(el.dataset.path);
+  return m ? m[1] : null;
+}
+function rockCardHtml(id){
+  var r = state.rocks[id];
+  var status = r.status || "ontrack";
+  return '<div class="rock-card">' +
+    '<input class="rock-title" type="text" data-path="rocks.' + id + '.title" value="' + esc(r.title) + '" data-rock-title="' + id + '">' +
+    '<input class="rock-quarter" type="text" data-path="rocks.' + id + '.quarter" value="' + esc(r.quarter || "") + '" data-rock-quarter="' + id + '" title="Quarter">' +
+    '<select data-rock-owner="' + id + '">' + ownerOptionsHtml(r.owner) + '</select>' +
+    '<input type="date" value="' + esc(r.dueDate || "") + '" data-rock-due="' + id + '">' +
+    '<select class="rock-status ' + esc(status) + '" data-rock-status="' + id + '">' +
+      '<option value="ontrack"' + (status === "ontrack" ? " selected" : "") + '>On Track</option>' +
+      '<option value="offtrack"' + (status === "offtrack" ? " selected" : "") + '>Off Track</option>' +
+      '<option value="done"' + (status === "done" ? " selected" : "") + '>Done</option>' +
+    '</select>' +
+    '<button class="icon-btn" type="button" data-rock-del="' + id + '" title="Delete Rock">&times;</button>' +
+  '</div>';
+}
+function wireRockRows(root){
+  root.querySelectorAll("[data-rock-title]").forEach(function(el){
     el.addEventListener("input", function(){ updateItemField("rocks", el.getAttribute("data-rock-title"), "title", el.value); });
   });
-  listEl.querySelectorAll("[data-rock-owner]").forEach(function(el){
+  root.querySelectorAll("[data-rock-quarter]").forEach(function(el){
+    el.addEventListener("input", function(){ updateItemField("rocks", el.getAttribute("data-rock-quarter"), "quarter", el.value); });
+    el.addEventListener("change", function(){
+      // Follow the Rock to its new quarter so it doesn't vanish once you click away.
+      var filterSel = document.getElementById("rockQuarterFilter");
+      if (filterSel.value !== "__all__" && el.value.trim() && filterSel.value !== el.value.trim()){
+        pendingFilterSelection = el.value.trim();
+        renderRocks();
+      }
+    });
+  });
+  root.querySelectorAll("[data-rock-owner]").forEach(function(el){
     el.addEventListener("change", function(){ updateItemFieldNow("rocks", el.getAttribute("data-rock-owner"), "owner", el.value); });
   });
-  listEl.querySelectorAll("[data-rock-due]").forEach(function(el){
+  root.querySelectorAll("[data-rock-due]").forEach(function(el){
     el.addEventListener("change", function(){ updateItemFieldNow("rocks", el.getAttribute("data-rock-due"), "dueDate", el.value); });
   });
-  listEl.querySelectorAll("[data-rock-status]").forEach(function(el){
+  root.querySelectorAll("[data-rock-status]").forEach(function(el){
     el.addEventListener("change", function(){ updateItemFieldNow("rocks", el.getAttribute("data-rock-status"), "status", el.value); });
   });
-  listEl.querySelectorAll("[data-rock-del]").forEach(function(el){
+  root.querySelectorAll("[data-rock-del]").forEach(function(el){
     el.addEventListener("click", function(){
       if (confirm("Delete this Rock?")) deleteItem("rocks", el.getAttribute("data-rock-del"));
     });
   });
 }
-document.getElementById("rockQuarterFilter").addEventListener("change", renderRocks);
+document.getElementById("rockQuarterFilter").addEventListener("change", function(){
+  document.getElementById("newRockQuarter").value =
+    this.value === "__all__" ? currentQuarterLabel() : this.value;
+  renderRocks();
+});
 document.getElementById("addRockBtn").addEventListener("click", function(){
   var titleEl = document.getElementById("newRockTitle");
-  var title = titleEl.value.trim();
-  if (!title) return;
+  if (!titleEl.value.trim()) return;
   var quarter = document.getElementById("newRockQuarter").value.trim() || currentQuarterLabel();
-  var owner = document.getElementById("newRockOwner").value;
-  var due = document.getElementById("newRockDue").value;
-  addItem("rocks", {title: title, owner: owner, quarter: quarter, dueDate: due, status: "ontrack", order: Date.now()});
+  addItem("rocks", {
+    title: titleEl.value.trim(),
+    owner: document.getElementById("newRockOwner").value,
+    quarter: quarter,
+    dueDate: document.getElementById("newRockDue").value,
+    status: "ontrack",
+    order: Date.now()
+  });
   titleEl.value = "";
   document.getElementById("newRockDue").value = "";
+  // Keep the new Rock visible instead of letting the quarter filter swallow it.
+  var filterSel = document.getElementById("rockQuarterFilter");
+  if (filterSel.value !== "__all__" && filterSel.value !== quarter){
+    pendingFilterSelection = quarter;
+    renderRocks();
+  }
 });
 document.getElementById("newRockTitle").addEventListener("keydown", function(e){
   if (e.key === "Enter") document.getElementById("addRockBtn").click();
 });
 
 // ---------- SCORECARD ----------
+function scoreNum(v){
+  if (v == null) return NaN;
+  var s = String(v).replace(/[$,%\s]/g, "");
+  return s === "" ? NaN : parseFloat(s);
+}
+function cellScoreClass(val, goal, direction){
+  var v = scoreNum(val), g = scoreNum(goal);
+  if (isNaN(v) || isNaN(g)) return "";
+  return (direction === "lte" ? v <= g : v >= g) ? "hit" : "miss";
+}
 function renderScorecard(){
   document.getElementById("newMeasurableOwner").innerHTML = ownerOptionsHtml(getWho());
 
-  var sc = state.scorecard || {measurables:{}, weekKeys:{}, weekData:{}};
+  var sc = state.scorecard;
   var measurables = sc.measurables || {};
   var mIds = Object.keys(measurables).sort(function(a,b){ return (measurables[a].order||0) - (measurables[b].order||0); });
   var weeks = Object.keys(sc.weekKeys || {}).sort();
 
-  var table = document.getElementById("scTable");
-  var thead = '<thead><tr><th style="text-align:left;">Measurable</th><th>Owner</th><th>Goal</th>' +
+  var thead = '<thead><tr><th style="text-align:left;">Measurable</th><th>Owner</th><th>Dir</th><th>Goal</th>' +
     weeks.map(function(w){
-      return '<th>' + esc(w) + '<button class="week-del" type="button" data-week-del="' + w + '">remove</button></th>';
-    }).join("") + '</tr></thead>';
+      return '<th>' + esc(w) + '<button class="week-del" type="button" data-week-del="' + esc(w) + '">remove</button></th>';
+    }).join("") + '<th></th></tr></thead>';
 
   var rows = mIds.map(function(id){
     var m = measurables[id];
+    var dir = m.direction || "gte";
     var cells = weeks.map(function(w){
       var val = (sc.weekData && sc.weekData[w] && sc.weekData[w][id] != null) ? sc.weekData[w][id] : "";
-      return '<td><input class="sc-cell" type="text" value="' + esc(val) + '" data-sc-cell="' + id + '|' + w + '" data-path="scorecard.weekData.' + w + '.' + id + '"></td>';
+      return '<td><input class="sc-cell ' + cellScoreClass(val, m.goal, dir) + '" type="text" value="' + esc(val) +
+        '" data-sc-cell="' + id + '|' + esc(w) + '" data-path="scorecard.weekData.' + esc(w) + '.' + id + '"></td>';
     }).join("");
     return '<tr>' +
       '<td class="measurable-name-cell"><input type="text" value="' + esc(m.name) + '" data-sc-name="' + id + '" data-path="scorecard.measurables.' + id + '.name"></td>' +
       '<td><select class="sc-owner" data-sc-owner="' + id + '">' + ownerOptionsHtml(m.owner) + '</select></td>' +
+      '<td><select class="sc-dir" data-sc-dir="' + id + '">' +
+        '<option value="gte"' + (dir === "gte" ? " selected" : "") + '>≥</option>' +
+        '<option value="lte"' + (dir === "lte" ? " selected" : "") + '>≤</option>' +
+      '</select></td>' +
       '<td><input class="sc-goal" type="text" value="' + esc(m.goal) + '" data-sc-goal="' + id + '" data-path="scorecard.measurables.' + id + '.goal"></td>' +
       cells +
       '<td><button class="icon-btn" type="button" data-sc-del="' + id + '" title="Delete row">&times;</button></td>' +
     '</tr>';
   }).join("");
 
-  table.innerHTML = thead + '<tbody>' + (rows || '<tr><td colspan="4" style="text-align:left;">No measurables yet — add one above.</td></tr>') + '</tbody>';
+  var table = document.getElementById("scTable");
+  table.innerHTML = thead + '<tbody>' + (rows || '<tr><td colspan="5" style="text-align:left;">No measurables yet — add one above.</td></tr>') + '</tbody>';
 
   table.querySelectorAll("[data-sc-name]").forEach(function(el){
     el.addEventListener("input", function(){ updateItemField("scorecard.measurables", el.getAttribute("data-sc-name"), "name", el.value); });
   });
   table.querySelectorAll("[data-sc-goal]").forEach(function(el){
-    el.addEventListener("input", function(){ updateItemField("scorecard.measurables", el.getAttribute("data-sc-goal"), "goal", el.value); });
+    el.addEventListener("input", function(){
+      var id = el.getAttribute("data-sc-goal");
+      updateItemField("scorecard.measurables", id, "goal", el.value);
+      recolorRow(id);
+    });
   });
   table.querySelectorAll("[data-sc-owner]").forEach(function(el){
     el.addEventListener("change", function(){ updateItemFieldNow("scorecard.measurables", el.getAttribute("data-sc-owner"), "owner", el.value); });
   });
+  table.querySelectorAll("[data-sc-dir]").forEach(function(el){
+    el.addEventListener("change", function(){
+      var id = el.getAttribute("data-sc-dir");
+      updateItemFieldNow("scorecard.measurables", id, "direction", el.value);
+      recolorRow(id);
+    });
+  });
   table.querySelectorAll("[data-sc-del]").forEach(function(el){
     el.addEventListener("click", function(){
-      if (confirm("Delete this measurable row?")) deleteItem("scorecard.measurables", el.getAttribute("data-sc-del"));
+      var id = el.getAttribute("data-sc-del");
+      if (!confirm("Delete this measurable row?")) return;
+      // Drop the orphaned weekly values along with the row.
+      var extra = Object.keys(state.scorecard.weekKeys || {}).map(function(w){
+        if (state.scorecard.weekData && state.scorecard.weekData[w]) delete state.scorecard.weekData[w][id];
+        return "scorecard.weekData." + w + "." + id;
+      });
+      deleteItem("scorecard.measurables", id, extra);
     });
   });
   table.querySelectorAll("[data-sc-cell]").forEach(function(el){
     el.addEventListener("input", function(){
       var parts = el.getAttribute("data-sc-cell").split("|");
       var mId = parts[0], w = parts[1];
-      if (!sc.weekData) sc.weekData = {};
-      if (!sc.weekData[w]) sc.weekData[w] = {};
-      sc.weekData[w][mId] = el.value;
-      var path = "scorecard.weekData." + w + "." + mId;
-      clearTimeout(debounceTimers[path]);
-      debounceTimers[path] = setTimeout(function(){
-        var patch = {};
-        patch[path] = el.value;
-        writePatch(patch);
-      }, 350);
+      setPath(state, "scorecard.weekData." + w + "." + mId, el.value);
+      var m = state.scorecard.measurables[mId] || {};
+      el.className = "sc-cell " + cellScoreClass(el.value, m.goal, m.direction || "gte");
+      var patch = {};
+      patch["scorecard.weekData." + w + "." + mId] = el.value;
+      debouncedPatch("scorecard.weekData." + w + "." + mId, patch, 350);
     });
   });
   table.querySelectorAll("[data-week-del]").forEach(function(el){
     el.addEventListener("click", function(){
       var w = el.getAttribute("data-week-del");
       if (!confirm("Remove the " + w + " column? This deletes that week's values.")) return;
-      delete sc.weekKeys[w];
-      if (sc.weekData) delete sc.weekData[w];
-      render();
+      delete state.scorecard.weekKeys[w];
+      if (state.scorecard.weekData) delete state.scorecard.weekData[w];
+      render(true);
       var patch = {};
       patch["scorecard.weekKeys." + w] = deleteField();
       patch["scorecard.weekData." + w] = deleteField();
@@ -926,13 +1210,22 @@ function renderScorecard(){
     });
   });
 }
+function recolorRow(mId){
+  var m = state.scorecard.measurables[mId] || {};
+  document.querySelectorAll('[data-sc-cell^="' + mId + '|"]').forEach(function(cell){
+    cell.className = "sc-cell " + cellScoreClass(cell.value, m.goal, m.direction || "gte");
+  });
+}
 document.getElementById("addMeasurableBtn").addEventListener("click", function(){
   var nameEl = document.getElementById("newMeasurableName");
-  var name = nameEl.value.trim();
-  if (!name) return;
-  var owner = document.getElementById("newMeasurableOwner").value;
-  var goal = document.getElementById("newMeasurableGoal").value.trim();
-  addItem("scorecard.measurables", {name: name, owner: owner, goal: goal, order: Date.now()});
+  if (!nameEl.value.trim()) return;
+  addItem("scorecard.measurables", {
+    name: nameEl.value.trim(),
+    owner: document.getElementById("newMeasurableOwner").value,
+    goal: document.getElementById("newMeasurableGoal").value.trim(),
+    direction: document.getElementById("newMeasurableDir").value,
+    order: Date.now()
+  });
   nameEl.value = "";
   document.getElementById("newMeasurableGoal").value = "";
 });
@@ -940,56 +1233,91 @@ document.getElementById("newMeasurableName").addEventListener("keydown", functio
   if (e.key === "Enter") document.getElementById("addMeasurableBtn").click();
 });
 document.getElementById("addWeekBtn").addEventListener("click", function(){
-  var sc = state.scorecard;
-  var existing = Object.keys(sc.weekKeys || {}).sort();
-  var last = existing.length ? new Date(existing[existing.length - 1]) : new Date();
-  var next = new Date(last.getFullYear(), last.getMonth(), last.getDate() + 7);
-  var key = isoDate(next);
-  if (sc.weekKeys[key]) { alert("That week is already on the board."); return; }
-  sc.weekKeys[key] = true;
-  render();
+  var existing = Object.keys(state.scorecard.weekKeys || {}).sort();
+  var key;
+  if (!existing.length){
+    key = recentMondays(1)[0];
+  } else {
+    var last = existing[existing.length - 1].split("-");
+    var next = new Date(+last[0], +last[1] - 1, +last[2] + 7);
+    key = isoDate(next);
+  }
+  if (state.scorecard.weekKeys[key]){ alert("That week is already on the board."); return; }
+  setPath(state, "scorecard.weekKeys." + key, true);
+  render(true);
   var patch = {};
   patch["scorecard.weekKeys." + key] = true;
   writePatch(patch);
 });
 
 // ---------- ISSUES ----------
+function openIssueIdsSorted(){
+  var issues = state.issues || {};
+  return Object.keys(issues)
+    .filter(function(id){ return issues[id].status !== "solved"; })
+    .sort(function(a,b){ return (issues[a].order||0) - (issues[b].order||0); });
+}
 function renderIssues(){
   document.getElementById("newIssueOwner").innerHTML = ownerOptionsHtml(getWho());
   var issues = state.issues || {};
-  var ids = Object.keys(issues);
-  var openIds = ids.filter(function(id){ return issues[id].status !== "solved"; })
-    .sort(function(a,b){ return (issues[a].order||0) - (issues[b].order||0); });
-  var solvedIds = ids.filter(function(id){ return issues[id].status === "solved"; })
-    .sort(function(a,b){ return (issues[b].order||0) - (issues[a].order||0); });
-
-  function rowHtml(id, solved){
-    var it = issues[id];
-    return '<div class="issue-row' + (solved ? " solved" : "") + '">' +
-      (solved ? "" : '<span class="pill open">Open</span>') +
-      '<input class="issue-title" type="text" value="' + esc(it.title) + '" data-issue-title="' + id + '">' +
-      '<select data-issue-owner="' + id + '">' + ownerOptionsHtml(it.owner) + '</select>' +
-      (solved
-        ? '<button class="icon-btn" type="button" style="color:var(--steel);" data-issue-reopen="' + id + '" title="Reopen">&#8635;</button>'
-        : '<button class="add-btn" type="button" data-issue-solve="' + id + '">Solve</button>') +
-      '<button class="icon-btn" type="button" data-issue-del="' + id + '" title="Delete">&times;</button>' +
-    '</div>';
-  }
+  var openIds = openIssueIdsSorted();
+  var solvedIds = Object.keys(issues)
+    .filter(function(id){ return issues[id].status === "solved"; })
+    .sort(function(a,b){ return (issues[b].solvedAt||0) - (issues[a].solvedAt||0); });
 
   document.getElementById("openIssueList").innerHTML = openIds.length
-    ? openIds.map(function(id){ return rowHtml(id, false); }).join("")
+    ? openIds.map(function(id, i){ return openIssueHtml(id, i, openIds.length); }).join("")
     : '<p class="hint">No open issues. Nice.</p>';
-  document.getElementById("solvedIssueList").innerHTML = solvedIds.map(function(id){ return rowHtml(id, true); }).join("");
-  document.getElementById("solvedToggle").textContent = (document.getElementById("solvedIssueList").classList.contains("hidden") ? "Show" : "Hide") + " solved issues (" + solvedIds.length + ")";
 
-  document.querySelectorAll("#openIssueList [data-issue-title], #solvedIssueList [data-issue-title]").forEach(function(el){
+  document.getElementById("solvedIssueList").innerHTML = solvedIds.map(function(id){
+    var it = issues[id];
+    return '<div class="issue-row solved">' +
+      '<input class="issue-title" type="text" value="' + esc(it.title) + '" data-path="issues.' + id + '.title" data-issue-title="' + id + '">' +
+      (it.solvedAt ? '<span class="issue-solved-at">solved ' + esc(fmtDate(it.solvedAt)) + '</span>' : '') +
+      '<select data-issue-owner="' + id + '">' + ownerOptionsHtml(it.owner) + '</select>' +
+      '<button class="icon-btn neutral" type="button" data-issue-reopen="' + id + '" title="Reopen">&#8635;</button>' +
+      '<button class="icon-btn" type="button" data-issue-del="' + id + '" title="Delete">&times;</button>' +
+    '</div>';
+  }).join("");
+
+  var solvedHidden = document.getElementById("solvedIssueList").classList.contains("hidden");
+  document.getElementById("solvedToggle").textContent =
+    (solvedHidden ? "Show" : "Hide") + " solved issues (" + solvedIds.length + ")";
+
+  wireIssueRows();
+}
+function openIssueHtml(id, index, total){
+  var it = state.issues[id];
+  return '<div class="issue-row">' +
+    '<span class="pill rank' + (index < 3 ? " top3" : "") + '">' + (index + 1) + '</span>' +
+    '<div class="move-btns">' +
+      '<button type="button" data-issue-up="' + id + '"' + (index === 0 ? " disabled" : "") + ' title="Move up">▲</button>' +
+      '<button type="button" data-issue-down="' + id + '"' + (index === total - 1 ? " disabled" : "") + ' title="Move down">▼</button>' +
+    '</div>' +
+    '<input class="issue-title" type="text" value="' + esc(it.title) + '" data-path="issues.' + id + '.title" data-issue-title="' + id + '">' +
+    '<select data-issue-owner="' + id + '">' + ownerOptionsHtml(it.owner) + '</select>' +
+    '<button class="add-btn" type="button" data-issue-solve="' + id + '">Solve</button>' +
+    '<button class="icon-btn" type="button" data-issue-del="' + id + '" title="Delete">&times;</button>' +
+  '</div>';
+}
+function wireIssueRows(){
+  document.querySelectorAll("[data-issue-title]").forEach(function(el){
     el.addEventListener("input", function(){ updateItemField("issues", el.getAttribute("data-issue-title"), "title", el.value); });
   });
-  document.querySelectorAll("#openIssueList [data-issue-owner], #solvedIssueList [data-issue-owner]").forEach(function(el){
+  document.querySelectorAll("[data-issue-owner]").forEach(function(el){
     el.addEventListener("change", function(){ updateItemFieldNow("issues", el.getAttribute("data-issue-owner"), "owner", el.value); });
   });
   document.querySelectorAll("[data-issue-solve]").forEach(function(el){
-    el.addEventListener("click", function(){ updateItemFieldNow("issues", el.getAttribute("data-issue-solve"), "status", "solved"); });
+    el.addEventListener("click", function(){
+      var id = el.getAttribute("data-issue-solve");
+      setPath(state, "issues." + id + ".status", "solved");
+      setPath(state, "issues." + id + ".solvedAt", Date.now());
+      render(true);
+      var patch = {};
+      patch["issues." + id + ".status"] = "solved";
+      patch["issues." + id + ".solvedAt"] = Date.now();
+      writePatch(patch);
+    });
   });
   document.querySelectorAll("[data-issue-reopen]").forEach(function(el){
     el.addEventListener("click", function(){ updateItemFieldNow("issues", el.getAttribute("data-issue-reopen"), "status", "open"); });
@@ -999,6 +1327,29 @@ function renderIssues(){
       if (confirm("Delete this issue?")) deleteItem("issues", el.getAttribute("data-issue-del"));
     });
   });
+  document.querySelectorAll("[data-issue-up]").forEach(function(el){
+    el.addEventListener("click", function(){ moveIssue(el.getAttribute("data-issue-up"), -1); });
+  });
+  document.querySelectorAll("[data-issue-down]").forEach(function(el){
+    el.addEventListener("click", function(){ moveIssue(el.getAttribute("data-issue-down"), 1); });
+  });
+}
+function moveIssue(id, dir){
+  var open = openIssueIdsSorted();
+  var i = open.indexOf(id);
+  var j = i + dir;
+  if (i < 0 || j < 0 || j >= open.length) return;
+  var otherId = open[j];
+  var a = state.issues[id].order || 0;
+  var b = state.issues[otherId].order || 0;
+  if (a === b) b = a + (dir > 0 ? 1 : -1);
+  setPath(state, "issues." + id + ".order", b);
+  setPath(state, "issues." + otherId + ".order", a);
+  render(true);
+  var patch = {};
+  patch["issues." + id + ".order"] = b;
+  patch["issues." + otherId + ".order"] = a;
+  writePatch(patch);
 }
 document.getElementById("solvedToggle").addEventListener("click", function(){
   document.getElementById("solvedIssueList").classList.toggle("hidden");
@@ -1006,47 +1357,129 @@ document.getElementById("solvedToggle").addEventListener("click", function(){
 });
 document.getElementById("addIssueBtn").addEventListener("click", function(){
   var titleEl = document.getElementById("newIssueTitle");
-  var title = titleEl.value.trim();
-  if (!title) return;
-  var owner = document.getElementById("newIssueOwner").value;
-  addItem("issues", {title: title, owner: owner, status: "open", order: Date.now()});
+  if (!titleEl.value.trim()) return;
+  addItem("issues", {
+    title: titleEl.value.trim(),
+    owner: document.getElementById("newIssueOwner").value,
+    status: "open",
+    order: Date.now()
+  });
   titleEl.value = "";
 });
 document.getElementById("newIssueTitle").addEventListener("keydown", function(e){
   if (e.key === "Enter") document.getElementById("addIssueBtn").click();
 });
 
-// ---------- L10 ----------
+// ---------- L10 TIMER ----------
+function timerState(){ return (state && state.l10 && state.l10.timer) || {}; }
+function segElapsed(segId){
+  var t = timerState();
+  var base = (t.elapsed && t.elapsed[segId]) || 0;
+  if (t.active === segId && t.startedAt) base += Math.floor((Date.now() - t.startedAt) / 1000);
+  return base;
+}
+function totalElapsed(){
+  return AGENDA_ITEMS.reduce(function(sum, item){ return sum + segElapsed(item.id); }, 0);
+}
+function startSegment(segId){
+  var t = timerState();
+  var patch = {};
+  if (t.active && t.active !== segId){
+    var banked = segElapsed(t.active);
+    setPath(state, "l10.timer.elapsed." + t.active, banked);
+    patch["l10.timer.elapsed." + t.active] = banked;
+  }
+  setPath(state, "l10.timer.active", segId);
+  setPath(state, "l10.timer.startedAt", Date.now());
+  patch["l10.timer.active"] = segId;
+  patch["l10.timer.startedAt"] = Date.now();
+  render(true);
+  writePatch(patch);
+}
+function pauseSegment(){
+  var t = timerState();
+  if (!t.active) return;
+  var banked = segElapsed(t.active);
+  var patch = {};
+  patch["l10.timer.elapsed." + t.active] = banked;
+  patch["l10.timer.active"] = null;
+  patch["l10.timer.startedAt"] = null;
+  setPath(state, "l10.timer.elapsed." + t.active, banked);
+  setPath(state, "l10.timer.active", null);
+  setPath(state, "l10.timer.startedAt", null);
+  render(true);
+  writePatch(patch);
+}
+// Ticks the visible clocks only — a full re-render every second would fight with typing.
+setInterval(function(){
+  if (!state) return;
+  AGENDA_ITEMS.forEach(function(item){
+    var el = document.querySelector('[data-clock="' + item.id + '"]');
+    if (!el) return;
+    var secs = segElapsed(item.id);
+    el.textContent = fmtClock(secs);
+    el.classList.toggle("over", secs > item.min * 60);
+  });
+  var total = document.getElementById("totalClock");
+  if (total){
+    var t = totalElapsed();
+    total.textContent = fmtClock(t);
+    total.classList.toggle("over", t > MEETING_TARGET_SECONDS);
+  }
+}, 1000);
+
 function renderL10(){
   var agenda = (state.l10 && state.l10.agenda) || {};
+  var t = timerState();
   document.getElementById("agendaList").innerHTML = AGENDA_ITEMS.map(function(item){
     var checked = !!agenda[item.id];
-    return '<li class="agenda-item' + (checked ? " checked" : "") + '">' +
+    var running = t.active === item.id;
+    var secs = segElapsed(item.id);
+    return '<li class="agenda-item' + (checked ? " checked" : "") + (running ? " running" : "") + '">' +
       '<input type="checkbox" ' + (checked ? "checked" : "") + ' data-agenda="' + item.id + '">' +
       '<span class="agenda-label">' + esc(item.label) + '</span>' +
-      '<span class="agenda-min">' + esc(item.min) + '</span>' +
+      '<span class="agenda-min">' + item.min + ' min</span>' +
+      '<span class="agenda-clock' + (secs > item.min * 60 ? " over" : "") + '" data-clock="' + item.id + '">' + fmtClock(secs) + '</span>' +
+      '<button class="timer-btn' + (running ? " pause" : "") + '" type="button" data-timer="' + item.id + '">' +
+        (running ? "Pause" : "Start") + '</button>' +
     '</li>';
   }).join("");
+
   document.querySelectorAll("[data-agenda]").forEach(function(el){
-    el.onchange = function(){
+    el.addEventListener("change", function(){
       var id = el.getAttribute("data-agenda");
       setPath(state, "l10.agenda." + id, el.checked);
       var patch = {};
       patch["l10.agenda." + id] = el.checked;
       writePatch(patch);
-      render();
-    };
+      render(true);
+    });
   });
+  document.querySelectorAll("[data-timer]").forEach(function(el){
+    el.addEventListener("click", function(){
+      var id = el.getAttribute("data-timer");
+      if (timerState().active === id) pauseSegment(); else startSegment(id);
+    });
+  });
+  var runningLabel = document.getElementById("runningLabel");
+  runningLabel.textContent = t.active
+    ? "· running: " + (AGENDA_ITEMS.filter(function(i){ return i.id === t.active; })[0] || {}).label
+    : "· paused";
+
+  var totalEl = document.getElementById("totalClock");
+  var tot = totalElapsed();
+  totalEl.textContent = fmtClock(tot);
+  totalEl.classList.toggle("over", tot > MEETING_TARGET_SECONDS);
 
   document.getElementById("newTodoOwner").innerHTML = ownerOptionsHtml(getWho());
   var todos = (state.l10 && state.l10.todos) || {};
   var tIds = Object.keys(todos).sort(function(a,b){ return (todos[a].order||0) - (todos[b].order||0); });
   document.getElementById("todoList").innerHTML = tIds.length ? tIds.map(function(id){
-    var t = todos[id];
-    return '<div class="todo-row' + (t.done ? " done" : "") + '">' +
-      '<input type="checkbox" ' + (t.done ? "checked" : "") + ' data-todo-done="' + id + '">' +
-      '<input class="todo-text" type="text" value="' + esc(t.text) + '" data-todo-text="' + id + '">' +
-      '<span class="todo-owner">' + esc(ownerName(t.owner)) + '</span>' +
+    var td = todos[id];
+    return '<div class="todo-row' + (td.done ? " done" : "") + '">' +
+      '<input type="checkbox" ' + (td.done ? "checked" : "") + ' data-todo-done="' + id + '">' +
+      '<input class="todo-text" type="text" value="' + esc(td.text) + '" data-path="l10.todos.' + id + '.text" data-todo-text="' + id + '">' +
+      '<span class="todo-owner">' + esc(ownerName(td.owner)) + '</span>' +
       '<button class="icon-btn" type="button" data-todo-del="' + id + '" title="Delete">&times;</button>' +
     '</div>';
   }).join("") : '<p class="hint">No open to-dos.</p>';
@@ -1063,12 +1496,13 @@ function renderL10(){
 
   var headlines = (state.l10 && state.l10.headlines) || {};
   function headlineListHtml(kind){
-    var ids = Object.keys(headlines).filter(function(id){ return headlines[id].kind === kind; })
-      .sort(function(a,b){ return (headlines[a].order||0) - (headlines[b].order||0); });
-    return ids.map(function(id){
-      return '<li><span class="simple-list-text">' + esc(headlines[id].text) + '</span>' +
-        '<button class="icon-btn" type="button" data-hl-del="' + id + '">&times;</button></li>';
-    }).join("");
+    return Object.keys(headlines)
+      .filter(function(id){ return headlines[id].kind === kind; })
+      .sort(function(a,b){ return (headlines[a].order||0) - (headlines[b].order||0); })
+      .map(function(id){
+        return '<li><span class="simple-list-text">' + esc(headlines[id].text) + '</span>' +
+          '<button class="icon-btn" type="button" data-hl-del="' + id + '">&times;</button></li>';
+      }).join("");
   }
   document.getElementById("customerHeadlineList").innerHTML = headlineListHtml("customer");
   document.getElementById("employeeHeadlineList").innerHTML = headlineListHtml("employee");
@@ -1077,13 +1511,44 @@ function renderL10(){
   });
 
   bindScalar("l10Notes", "l10.notes");
+  renderRatings();
+}
+function renderRatings(){
+  var ratings = (state.l10 && state.l10.ratings) || {};
+  var vals = [];
+  var html = ["owner1","owner2","owner3"].map(function(slot){
+    var v = ratings[slot];
+    if (v) vals.push(Number(v));
+    var opts = ['<option value="">–</option>'];
+    for (var n = 1; n <= 10; n++){
+      opts.push('<option value="' + n + '"' + (String(v) === String(n) ? " selected" : "") + '>' + n + '</option>');
+    }
+    return '<div class="field"><label>' + esc(ownerName(slot)) + '</label>' +
+      '<select data-rating="' + slot + '">' + opts.join("") + '</select></div>';
+  }).join("");
+  var avg = vals.length ? (vals.reduce(function(a,b){ return a + b; }, 0) / vals.length) : null;
+  html += '<div class="rating-avg">Average<br><strong>' + (avg == null ? "—" : avg.toFixed(1)) + '</strong></div>';
+  document.getElementById("ratingRow").innerHTML = html;
+  document.querySelectorAll("[data-rating]").forEach(function(el){
+    el.addEventListener("change", function(){
+      var slot = el.getAttribute("data-rating");
+      setPath(state, "l10.ratings." + slot, el.value);
+      var patch = {};
+      patch["l10.ratings." + slot] = el.value;
+      writePatch(patch);
+      renderRatings();
+    });
+  });
 }
 document.getElementById("addTodoBtn").addEventListener("click", function(){
   var textEl = document.getElementById("newTodoText");
-  var text = textEl.value.trim();
-  if (!text) return;
-  var owner = document.getElementById("newTodoOwner").value;
-  addItem("l10.todos", {text: text, owner: owner, done: false, order: Date.now()});
+  if (!textEl.value.trim()) return;
+  addItem("l10.todos", {
+    text: textEl.value.trim(),
+    owner: document.getElementById("newTodoOwner").value,
+    done: false,
+    order: Date.now()
+  });
   textEl.value = "";
 });
 document.getElementById("newTodoText").addEventListener("keydown", function(e){
@@ -1101,16 +1566,28 @@ document.getElementById("addEmployeeHeadlineBtn").addEventListener("click", func
   addItem("l10.headlines", {text: el.value.trim(), kind: "employee", order: Date.now()});
   el.value = "";
 });
+document.getElementById("resetTimerBtn").addEventListener("click", function(){
+  if (!confirm("Reset all segment timers to 0:00 for everyone?")) return;
+  var patch = {"l10.timer.active": null, "l10.timer.startedAt": null, "l10.timer.elapsed": {}};
+  setPath(state, "l10.timer", {active: null, startedAt: null, elapsed: {}});
+  render(true);
+  writePatch(patch);
+});
 document.getElementById("resetMeetingBtn").addEventListener("click", function(){
-  if (!confirm("Reset the meeting agenda and clear headlines/notes for everyone? To-dos are kept.")) return;
-  var patch = {};
-  AGENDA_ITEMS.forEach(function(item){ patch["l10.agenda." + item.id] = false; });
-  patch["l10.headlines"] = {};
-  patch["l10.notes"] = "";
+  if (!confirm("Reset the agenda, timers, headlines, ratings and notes for everyone? To-dos are kept.")) return;
+  var patch = {
+    "l10.agenda": {},
+    "l10.headlines": {},
+    "l10.notes": "",
+    "l10.ratings": {},
+    "l10.timer": {active: null, startedAt: null, elapsed: {}}
+  };
   state.l10.agenda = {};
   state.l10.headlines = {};
   state.l10.notes = "";
-  render();
+  state.l10.ratings = {};
+  state.l10.timer = {active: null, startedAt: null, elapsed: {}};
+  render(true);
   writePatch(patch);
 });
 
@@ -1121,13 +1598,12 @@ function setStatus(kind, text){ statusDot.className = "status-dot " + kind; stat
 
 document.getElementById("shareBtn").addEventListener("click", function(){
   var btn = document.getElementById("shareBtn");
-  var defaultHTML = btn.innerHTML;
+  var url = location.href;
   function showCopied(){
     btn.textContent = "✓ Link copied";
     btn.classList.add("share-copied");
-    setTimeout(function(){ btn.innerHTML = defaultHTML; btn.classList.remove("share-copied"); }, 1600);
+    setTimeout(function(){ btn.textContent = "Share link"; btn.classList.remove("share-copied"); }, 1600);
   }
-  var url = location.href;
   if (navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(url).then(showCopied).catch(function(){ window.prompt("Copy this link:", url); });
   } else {
@@ -1135,35 +1611,89 @@ document.getElementById("shareBtn").addEventListener("click", function(){
   }
 });
 
-// ---------- live listener ----------
-setStatus("connecting", "Connecting…");
-onSnapshot(docRef, {includeMetadataChanges: true}, function(snap){
-  if (!snap.exists()){
-    if (!seeding){
-      seeding = true;
-      setDoc(docRef, seedDoc()).catch(function(e){ console.error(e); setStatus("error", "Couldn't connect"); });
-    }
+// ---------- auth ----------
+var provider = new GoogleAuthProvider();
+document.getElementById("signInBtn").addEventListener("click", function(){
+  document.getElementById("authError").classList.add("hidden");
+  signInWithPopup(auth, provider).catch(function(e){
+    console.error(e);
+    var el = document.getElementById("authError");
+    el.textContent = e.code === "auth/popup-blocked"
+      ? "Your browser blocked the sign-in popup — allow popups for this page and try again."
+      : "Sign-in failed: " + (e.message || e.code);
+    el.classList.remove("hidden");
+  });
+});
+document.getElementById("signOutBtn").addEventListener("click", function(){
+  signOut(auth).then(function(){ location.reload(); });
+});
+
+onAuthStateChanged(auth, function(user){
+  currentUser = user;
+  if (!user){
+    document.getElementById("authGate").classList.remove("hidden");
+    document.getElementById("app").classList.add("hidden");
     return;
   }
-  var data = snap.data();
-  state = {
-    owners: data.owners || {owner1:"Owner 1", owner2:"Owner 2", owner3:"Owner 3"},
-    vto: data.vto || {},
-    rocks: data.rocks || {},
-    scorecard: data.scorecard || {measurables:{}, weekKeys:{}, weekData:{}},
-    issues: data.issues || {},
-    l10: data.l10 || {agenda:{}, headlines:{}, todos:{}, notes:""}
-  };
-  if (!state.vto.threeYear) state.vto.threeYear = {};
-  if (!state.vto.oneYear) state.vto.oneYear = {};
-  renderIdentity();
-  render();
-  setStatus(snap.metadata.fromCache ? "offline" : "live", snap.metadata.fromCache ? "Offline — last synced state" : "Live");
-  if (!getWho()) showWhoModal();
-}, function(err){
-  console.error(err);
-  setStatus("error", "Connection error");
+  document.getElementById("authGate").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  if (!appStarted){
+    appStarted = true;
+    startListening();
+  }
 });
+
+// ---------- live listener ----------
+function startListening(){
+  setStatus("connecting", "Connecting…");
+  onSnapshot(docRef, {includeMetadataChanges: true}, function(snap){
+    if (!snap.exists()){
+      if (!seeding){
+        seeding = true;
+        setDoc(docRef, seedDoc()).catch(function(e){ console.error(e); setStatus("error", "Couldn't connect"); });
+      }
+      return;
+    }
+    // Our own un-acked writes would rebuild the DOM mid-keystroke; local state already has them.
+    if (snap.metadata.hasPendingWrites && state) return;
+
+    var data = snap.data();
+    state = {
+      owners: data.owners || {owner1:"Owner 1", owner2:"Owner 2", owner3:"Owner 3"},
+      slotByUid: data.slotByUid || {},
+      vto: data.vto || {},
+      rocks: data.rocks || {},
+      scorecard: data.scorecard || {measurables:{}, weekKeys:{}, weekData:{}},
+      issues: data.issues || {},
+      l10: data.l10 || {agenda:{}, headlines:{}, todos:{}, notes:"", timer:{}, ratings:{}}
+    };
+    if (!state.vto.threeYear) state.vto.threeYear = {};
+    if (!state.vto.oneYear) state.vto.oneYear = {};
+    if (!state.scorecard.measurables) state.scorecard.measurables = {};
+    if (!state.scorecard.weekKeys) state.scorecard.weekKeys = {};
+    if (!state.scorecard.weekData) state.scorecard.weekData = {};
+    if (!state.l10.timer) state.l10.timer = {active:null, startedAt:null, elapsed:{}};
+    if (!state.l10.ratings) state.l10.ratings = {};
+    Object.keys(pendingEdits).forEach(function(p){ setPath(state, p, pendingEdits[p]); });
+
+    renderIdentity();
+    renderLastEdit(data);
+    render();
+    setStatus(snap.metadata.fromCache ? "offline" : "live", snap.metadata.fromCache ? "Offline — last synced state" : "Live");
+    if (!getWho()) showWhoModal();
+  }, function(err){
+    console.error(err);
+    if (err.code === "permission-denied"){
+      document.getElementById("app").classList.add("hidden");
+      document.getElementById("authGate").classList.remove("hidden");
+      var el = document.getElementById("authError");
+      el.textContent = "This Google account isn't on the allowlist for the EOS plan. Ask an owner to add "
+        + ((currentUser && currentUser.email) || "your address") + " to the Firestore rules.";
+      el.classList.remove("hidden");
+    }
+    setStatus("error", "Connection error");
+  });
+}
 </script>
 </body>
 </html>

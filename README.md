@@ -46,23 +46,25 @@ There's no login/auth on this page — anyone with the page URL can view and edi
 
 # EOS Framework — Live (`eos.html`)
 
-A live-synced, editable web app for the 3 owners to build out their Entrepreneurial Operating System (EOS) framework together — same real-time, no-login pattern as the checklist above, backed by the same Firebase project in a separate collection.
+A live-synced web app for the 3 owners to build out their Entrepreneurial Operating System (EOS) framework together, backed by the same Firebase project as the checklist in a separate `eos/main` document. Unlike the checklist, this app **requires Google sign-in** and only allowlisted accounts can open it.
 
 Covers the full EOS suite:
 
-- **V/TO** — Core Values, Core Focus (purpose/niche), 10-Year Target, Marketing Strategy, 3-Year Picture, and 1-Year Plan, with live counts of on-track/off-track Rocks and open issues.
-- **Rocks** — quarterly priorities, one owner and due date each, filterable by quarter, status pill (On Track / Off Track / Done).
-- **Scorecard** — weekly measurables table with owner, goal, and an editable cell per week; add/remove measurable rows and week columns.
-- **Issues List** — Identify/Discuss/Solve: add issues, assign an owner, mark solved (collapses into a "Solved" section), reopen or delete.
-- **L10 Meeting** — the standard 7-segment Level 10 agenda as a live checklist, Customer/Employee headlines, a shared to-do list, and free-form IDS notes. "Reset for next meeting" clears the agenda/headlines/notes but keeps to-dos.
+- **V/TO** — Core Values, Core Focus (purpose/niche), 10-Year Target, Marketing Strategy, 3-Year Picture, and 1-Year Plan. A quarter-scoped "At a Glance" card counts on-track / off-track / done Rocks for the current quarter plus open issues. **Print V/TO** produces a clean one-pager (text fields are mirrored into printable text so nothing is clipped).
+- **Rocks** — quarterly priorities grouped by owner, each with an editable quarter, owner, due date, and color-coded status (On Track / Off Track / Done). Filter by quarter; adding or re-dating a Rock moves the filter to follow it so it never disappears.
+- **Scorecard** — weekly measurables with an owner, a goal, and a direction (`≥` higher is better / `≤` lower is better). Each weekly cell colors itself green or red against the goal; non-numeric entries stay unscored. Add or remove measurable rows and week columns; deleting a row also clears its stored weekly values.
+- **Issues List** — Identify, Discuss, Solve. Issues are ranked with ▲/▼ and the top 3 are highlighted, since that's what you actually work in the meeting. Solve records a date; solved issues collapse into their own section and can be reopened.
+- **L10 Meeting** — the standard 7-segment Level 10 agenda with a **shared timer** per segment (all three of you see the same clock; segments turn red when over their allotted minutes) and a running meeting total against the 90-minute target. Plus Customer/Employee headlines, a shared to-do list, IDS notes, and a **1–10 meeting rating** per owner with a live average. "Reset for next meeting" clears the agenda, timers, headlines, ratings and notes but keeps to-dos.
 
-## Owner identity
+The header shows connection state, who last edited and when, and who you're currently acting as.
 
-On first visit, each of the 3 owners picks their name from a "Who's viewing?" prompt — stored only in that browser's `localStorage`, so it's not itself synced. It's used to default new Rocks/to-dos/issues to the current viewer and to show "Viewing as ___" in the header. The 3 owner names themselves are editable from the V/TO tab and *are* synced, so renaming a slot updates everywhere it's referenced. Use **Switch** in the header to change identity on a shared device.
+## Sign-in setup (do this once)
 
-## Firestore setup
+The app uses Google sign-in, and the allowlist lives in the Firestore rules — **not** in the page source, so owner email addresses are never published in this public repo.
 
-Talks to the same Firebase project (`handyman-launch-checklist`) as the checklist, at document path `eos/main`. Add a second scoped rule alongside the existing one:
+1. **Enable Google sign-in**: Firebase console → project `handyman-launch-checklist` → **Authentication** → **Sign-in method** → enable **Google** → Save.
+2. **Authorize the GitHub Pages domain**: still under **Authentication** → **Settings** → **Authorized domains** → **Add domain** → `mattkaciban.github.io`. Sign-in fails silently from unauthorized domains, so don't skip this.
+3. **Set the rules** (Firestore Database → Rules), replacing the three placeholder addresses with the owners' actual Google account emails:
 
 ```
 rules_version = '2';
@@ -72,13 +74,34 @@ service cloud.firestore {
       allow read, write: if true;
     }
     match /eos/{doc} {
-      allow read, write: if true;
+      allow read, write: if request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+             'owner-one@example.com',
+             'owner-two@example.com',
+             'owner-three@example.com'
+           ];
     }
   }
 }
 ```
 
-Same no-login tradeoff as the checklist app: anyone with the link can view and edit everything.
+4. Click **Publish**.
+
+To add or remove someone later, edit that email list and publish again — no code change or redeploy needed. Anyone signed in with a non-allowlisted account gets a clear "not on the allowlist" message naming the address they used.
+
+Note the checklist app (`index.html`) is deliberately left open — only the `eos` collection requires auth.
+
+## Owner identity
+
+Separate from *authentication*, the app tracks which of the 3 owner slots you are, so new Rocks, to-dos and issues default to you. On first sign-in you pick your name once; the choice is stored against your Google account in Firestore, so it follows you to every device. **Switch** in the header changes it (useful on a shared laptop). The 3 owner names are editable from the V/TO tab and are synced, so renaming a slot updates everywhere it's referenced.
+
+## How syncing works
+
+Every edit writes to Firestore and all open tabs update live. Two details worth knowing:
+
+- **Typing is never interrupted.** Incoming updates don't rebuild a field while you're typing in it — they're applied when you click away or pause. In-flight keystrokes are re-applied over incoming data, so a slow connection can't roll back what you just typed.
+- **Write failures are visible.** The status dot turns red with "Couldn't save" rather than failing silently.
 
 ## Deploy
 
